@@ -1,0 +1,73 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="92" y1="40" x2="1510" y2="960" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E7E1D5"/>
+      <stop offset="1" stop-color="#F8F5EE"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="228" y1="170" x2="1224" y2="834" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#F3EBDF"/>
+    </linearGradient>
+    <filter id="shadow" x="56" y="52" width="1488" height="896" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="24"/>
+      <feGaussianBlur stdDeviation="28"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.168627 0 0 0 0 0.133333 0 0 0 0 0.0823529 0 0 0 0.16 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="118" y="96" width="1364" height="808" rx="36" fill="url(#panel)"/>
+  </g>
+
+  <rect x="168" y="146" width="1264" height="54" rx="14" fill="#F8F3EA" stroke="#E0D5C3"/>
+  <circle cx="208" cy="173" r="6" fill="#9F876D"/>
+  <circle cx="228" cy="173" r="6" fill="#B8A18A"/>
+  <circle cx="248" cy="173" r="6" fill="#D0BEAD"/>
+  <text x="1082" y="178" fill="#79614C" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.2">SPRING MVC / MATCHING ENGINE</text>
+
+  <rect x="190" y="232" width="788" height="620" rx="24" fill="#F8F2E8" stroke="#E1D6C5"/>
+  <text x="244" y="296" fill="#7B6651" font-family="JetBrains Mono, monospace" font-size="15" letter-spacing="1.5">PFE MATCHER</text>
+  <text x="244" y="378" fill="#192028" font-family="Plus Jakarta Sans, sans-serif" font-size="66" font-weight="700">Constraint-Based Assignment</text>
+  <text x="244" y="430" fill="#3F535F" font-family="Plus Jakarta Sans, sans-serif" font-size="23">Matching student preferences with project capacity and fairness rules.</text>
+
+  <rect x="244" y="474" width="682" height="212" rx="16" fill="#FFFFFF" stroke="#E1D6C5"/>
+  <text x="276" y="510" fill="#7A6651" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.2">MATCHING MATRIX</text>
+  <rect x="276" y="532" width="618" height="134" rx="12" fill="#F8F2E8" stroke="#E3D8C8"/>
+  <path d="M302 556H868M302 584H868M302 612H868M302 640H868" stroke="#E7DDCE" stroke-width="2"/>
+  <path d="M378 532V666M454 532V666M530 532V666M606 532V666M682 532V666M758 532V666M834 532V666" stroke="#E7DDCE" stroke-width="2"/>
+  <rect x="302" y="556" width="76" height="28" rx="8" fill="#E8D6BD"/>
+  <rect x="530" y="584" width="76" height="28" rx="8" fill="#DBC4A8"/>
+  <rect x="758" y="612" width="76" height="28" rx="8" fill="#CCAE8A"/>
+
+  <rect x="244" y="706" width="198" height="42" rx="10" fill="#F8F3EA" stroke="#E1D6C5"/>
+  <rect x="456" y="706" width="198" height="42" rx="10" fill="#F8F3EA" stroke="#E1D6C5"/>
+  <rect x="668" y="706" width="218" height="42" rx="10" fill="#F8F3EA" stroke="#E1D6C5"/>
+  <text x="272" y="732" fill="#745E49" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">SPRING MVC</text>
+  <text x="484" y="732" fill="#745E49" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">HIBERNATE</text>
+  <text x="696" y="732" fill="#745E49" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">MYSQL MATCH DATA</text>
+
+  <rect x="1010" y="232" width="402" height="620" rx="24" fill="#FBF7F0" stroke="#E1D6C5"/>
+  <rect x="1048" y="274" width="326" height="248" rx="16" fill="#F0E3D2" stroke="#DFCFB8"/>
+  <rect x="1080" y="304" width="198" height="11" rx="5" fill="#CCB59B"/>
+  <rect x="1080" y="332" width="254" height="10" rx="5" fill="#DECBB2"/>
+
+  <circle cx="1144" cy="420" r="34" fill="#FFFFFF"/>
+  <circle cx="1260" cy="420" r="34" fill="#FFFFFF"/>
+  <circle cx="1202" cy="470" r="34" fill="#FFFFFF"/>
+  <path d="M1178 420H1226M1162 450L1186 470M1242 450L1218 470" stroke="#B89773" stroke-width="4" stroke-linecap="round"/>
+
+  <rect x="1048" y="548" width="326" height="122" rx="14" fill="#FFFFFF" stroke="#E1D6C5"/>
+  <text x="1078" y="582" fill="#7A6651" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">STRATEGY</text>
+  <text x="1078" y="624" fill="#192028" font-family="Plus Jakarta Sans, sans-serif" font-size="25" font-weight="700">Preference and capacity constraints</text>
+
+  <rect x="1048" y="686" width="326" height="134" rx="14" fill="#FFFFFF" stroke="#E1D6C5"/>
+  <text x="1078" y="720" fill="#7A6651" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">OUTCOME</text>
+  <text x="1078" y="760" fill="#2A3D49" font-family="Plus Jakarta Sans, sans-serif" font-size="23" font-weight="600">Transparent assignment process</text>
+  <text x="1078" y="790" fill="#47606D" font-family="Plus Jakarta Sans, sans-serif" font-size="19">Fair coverage for students and faculty</text>
+</svg>

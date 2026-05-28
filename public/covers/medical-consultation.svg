@@ -1,0 +1,76 @@
+<svg width="1600" height="1000" viewBox="0 0 1600 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="94" y1="40" x2="1518" y2="962" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#E2EBDD"/>
+      <stop offset="1" stop-color="#F6FAF4"/>
+    </linearGradient>
+    <linearGradient id="panel" x1="228" y1="170" x2="1224" y2="834" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF4EA"/>
+    </linearGradient>
+    <filter id="shadow" x="56" y="52" width="1488" height="896" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="24"/>
+      <feGaussianBlur stdDeviation="28"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0980392 0 0 0 0 0.152941 0 0 0 0 0.109804 0 0 0 0.16 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#bg)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="118" y="96" width="1364" height="808" rx="36" fill="url(#panel)"/>
+  </g>
+
+  <rect x="168" y="146" width="1264" height="54" rx="14" fill="#F6FAF4" stroke="#D7E2D2"/>
+  <circle cx="208" cy="173" r="6" fill="#8EA58A"/>
+  <circle cx="228" cy="173" r="6" fill="#ADBEA8"/>
+  <circle cx="248" cy="173" r="6" fill="#C8D6C3"/>
+  <text x="1078" y="178" fill="#5C7558" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.2">HEALTHCARE PLATFORM / FULL-STACK</text>
+
+  <rect x="190" y="232" width="788" height="620" rx="24" fill="#F4F9F1" stroke="#D8E4D4"/>
+  <text x="244" y="296" fill="#637E61" font-family="JetBrains Mono, monospace" font-size="15" letter-spacing="1.5">MEDICAL CONSULTATION</text>
+  <text x="244" y="378" fill="#192028" font-family="Plus Jakarta Sans, sans-serif" font-size="64" font-weight="700">Clinic Workflow System</text>
+  <text x="244" y="430" fill="#3E535E" font-family="Plus Jakarta Sans, sans-serif" font-size="23">Appointments, protected records, and reporting in one operational product.</text>
+
+  <rect x="244" y="474" width="682" height="174" rx="16" fill="#FFFFFF" stroke="#D8E4D4"/>
+  <text x="276" y="510" fill="#688465" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.2">PATIENT FLOW</text>
+  <rect x="276" y="530" width="620" height="90" rx="12" fill="#F4F9F1" stroke="#DAE7D5"/>
+  <path d="M322 576H850" stroke="#D6E3D0" stroke-width="2"/>
+  <circle cx="350" cy="576" r="18" fill="#DDEAD8"/>
+  <circle cx="530" cy="576" r="18" fill="#D7E5D1"/>
+  <circle cx="710" cy="576" r="18" fill="#D0E0C9"/>
+  <circle cx="850" cy="576" r="18" fill="#C8D9C1"/>
+  <text x="336" y="582" fill="#5C7458" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.5">1</text>
+  <text x="516" y="582" fill="#5C7458" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.5">2</text>
+  <text x="696" y="582" fill="#5C7458" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.5">3</text>
+  <text x="836" y="582" fill="#5C7458" font-family="JetBrains Mono, monospace" font-size="9" letter-spacing="0.5">4</text>
+
+  <rect x="244" y="674" width="206" height="52" rx="12" fill="#FFFFFF" stroke="#D8E4D4"/>
+  <rect x="464" y="674" width="206" height="52" rx="12" fill="#FFFFFF" stroke="#D8E4D4"/>
+  <rect x="684" y="674" width="242" height="52" rx="12" fill="#FFFFFF" stroke="#D8E4D4"/>
+  <text x="274" y="704" fill="#607B5D" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">RBAC + AUTH</text>
+  <text x="494" y="704" fill="#607B5D" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">SCHEDULING</text>
+  <text x="714" y="704" fill="#607B5D" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">PDF + EXCEL TOOLS</text>
+
+  <rect x="1010" y="232" width="402" height="620" rx="24" fill="#F8FCF6" stroke="#D7E2D2"/>
+  <rect x="1048" y="274" width="326" height="260" rx="16" fill="#EAF3E6" stroke="#D6E3D0"/>
+  <rect x="1080" y="304" width="196" height="11" rx="5" fill="#C2D4BC"/>
+  <rect x="1080" y="332" width="258" height="10" rx="5" fill="#D1DECB"/>
+  <rect x="1080" y="360" width="262" height="144" rx="12" fill="#FFFFFF" stroke="#D6E3D0"/>
+  <rect x="1110" y="388" width="206" height="30" rx="8" fill="#EEF6EB"/>
+  <rect x="1110" y="430" width="130" height="48" rx="8" fill="#EEF6EB"/>
+  <rect x="1250" y="430" width="66" height="48" rx="8" fill="#EEF6EB"/>
+
+  <rect x="1048" y="558" width="326" height="114" rx="14" fill="#FFFFFF" stroke="#D6E3D0"/>
+  <text x="1078" y="592" fill="#678365" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">SECURITY</text>
+  <text x="1078" y="632" fill="#192028" font-family="Plus Jakarta Sans, sans-serif" font-size="24" font-weight="700">Role permissions with activity logs</text>
+
+  <rect x="1048" y="686" width="326" height="134" rx="14" fill="#FFFFFF" stroke="#D6E3D0"/>
+  <text x="1078" y="720" fill="#678365" font-family="JetBrains Mono, monospace" font-size="12" letter-spacing="1.1">STACK</text>
+  <text x="1078" y="760" fill="#2A3D49" font-family="Plus Jakarta Sans, sans-serif" font-size="23" font-weight="600">Laravel, MySQL, reporting flows</text>
+  <text x="1078" y="790" fill="#47606D" font-family="Plus Jakarta Sans, sans-serif" font-size="19">Built for real administrative operations</text>
+</svg>

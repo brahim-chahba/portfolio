@@ -1,7 +1,6 @@
 export const site = {
   name: "Brahim Chahba",
-  initials: "BC",
-  role: "Digital Transformation and AI Engineering Student",
+  role: "AI and Backend Engineering Student",
   email: "brahimchahba9@gmail.com",
   phone: "+212 6 59 52 29 99",
   location: "Agadir, Morocco",
@@ -9,190 +8,167 @@ export const site = {
   linkedin: "https://www.linkedin.com/in/brahimchahba/",
   resume: "/Brahim_Chahba_CV.pdf",
   intro:
-    "I am a 4th-year engineering student focused on practical full-stack and AI delivery, from Laravel and React platforms to Azure-deployed machine learning pipelines.",
+    "I build practical AI, backend, and cloud products with clean architecture and production-ready execution.",
 };
 
 export const navItems = [
+  { label: "Home", href: "#hero" },
+  { label: "Work", href: "#work" },
+  { label: "Services", href: "#capabilities" },
+  { label: "Engineering", href: "#engineering" },
   { label: "About", href: "#about" },
-  { label: "Projects", href: "#projects" },
-  { label: "Experience", href: "#experience" },
-  { label: "Education", href: "#education" },
-  { label: "Skills", href: "#skills" },
-  { label: "Certifications", href: "#certifications" },
   { label: "Contact", href: "#contact" },
 ];
 
-export const heroRotatingPhrases = [
-  "AI solutions",
-  "full-stack platforms",
-  "data pipelines",
-  "cloud deployments",
-];
-
 export const about = {
+  heading: "Fourth-year engineering student focused on practical AI and backend systems.",
   paragraphs: [
-    "I am currently in the Digital Transformation and Artificial Intelligence engineering track at ENSAH. I enjoy building systems that connect robust backend architecture with useful product experiences.",
-    "My work spans web platforms, machine learning pipelines, and cloud deployment. I value clean implementation, practical problem solving, and learning through real projects with strong technical teams.",
+    "At ENSAH, I work on software that combines AI features, backend services, and cloud delivery under real constraints.",
+    "I am currently open to internship and freelance collaborations where I can contribute end-to-end implementation.",
+  ],
+  facts: [
+    { label: "Base", value: "Agadir, Morocco" },
+    { label: "Education", value: "ENSAH, fourth year (2022-2027)" },
+    { label: "Focus", value: "AI features, backend architecture, cloud deployment" },
+    { label: "Availability", value: "Internships and freelance projects" },
   ],
 };
+
+export const capabilities = [
+  {
+    title: "AI feature delivery",
+    body: "From model experimentation to production inference APIs with measurable evaluation.",
+    chips: ["NLP", "Transformers", "PyTorch", "Azure ML"],
+    deliverables: ["Fine-tuned models", "Managed endpoints", "Evaluation pipelines"],
+  },
+  {
+    title: "Backend and API systems",
+    body: "Structured backend services with role boundaries, authentication, and maintainable API architecture.",
+    chips: ["Spring Boot", "Spring MVC", "Laravel", "MySQL"],
+    deliverables: ["API design", "Auth and RBAC", "Database normalization"],
+  },
+  {
+    title: "Cloud and data pipelines",
+    body: "Reproducible data and training workflows translated into deployable cloud artifacts.",
+    chips: ["Azure ML", "Docker", "Python", "MLflow"],
+    deliverables: ["Orchestrated pipelines", "Containerized workflows", "Deployment automation"],
+  },
+];
 
 export const education = [
   {
     period: "2022 - 2027",
     school: "Ecole Nationale des Sciences Appliquees d'Al Hoceima (ENSAH)",
-    degree: "State Engineering Degree in Digital Transformation and Artificial Intelligence",
-    details:
-      "Focused on software engineering, machine learning, cloud computing, and end-to-end application delivery.",
+    degree: "State engineering degree in digital transformation and AI",
+    details: "Specialization in software engineering, machine learning, and cloud delivery.",
   },
 ];
 
 export const experience = [
   {
     period: "Jul 2025 - Aug 2025",
-    role: "Full-Stack Intern",
+    role: "Full-stack developer intern",
     company: "CQPM Boujdour",
     summary:
-      "Built and delivered an academic administration platform for trainee and module operations.",
+      "Built an academic administration platform for trainee records, attendance, modules, and grading.",
     bullets: [
-      "Developed a web platform for trainees, modules, attendance, and grading workflows.",
-      "Implemented Excel import/export and automated PDF document generation.",
-      "Worked across backend, database modeling, and user-facing interfaces.",
+      "Delivered end-to-end workflows for trainee records, modules, attendance, and grading.",
+      "Implemented Excel import-export and PDF document generation for administrative reporting.",
+      "Handled backend architecture, database design, and user-facing UI under real delivery constraints.",
     ],
-    tech: ["Laravel", "PHP", "MySQL", "Blade", "Bootstrap", "DomPDF"],
   },
 ];
 
 export const projects = [
   {
-    title: "Fake News Detection - Azure ML End-to-End Pipeline",
+    title: "Fake news detection with Azure ML",
     year: "2025 - 2026",
     tags: ["NLP", "Azure ML", "React"],
     summary:
-      "Built a real-time fake-news classification system with data preprocessing, DistilBERT fine-tuning, and low-latency Azure endpoint deployment.",
+      "End-to-end fake news classification with a fine-tuned transformer and real-time inference UI.",
     tech: [
       "Python",
       "PyTorch",
-      "Hugging Face Transformers",
+      "Transformers",
       "Azure ML",
+      "MLflow",
       "React",
       "Vite",
       "Tailwind",
-      "MLflow",
     ],
     accent: "blue",
-    github: "https://github.com/brahim-chahba",
+    cover: "/covers/fake-news-azure.svg",
+    github: "https://github.com/brahim-chahba/Fake-news-detection-azure",
+    repositoryStatus: "Public repository",
   },
   {
-    title: "Medical Consultation Web Application",
+    title: "Medical consultation platform",
     year: "2024 - 2025",
-    tags: ["Laravel", "Full-Stack", "Healthcare"],
+    tags: ["Laravel", "Full-stack", "Healthcare"],
     summary:
-      "Developed a secure web app for medical appointments and consultation management with role-based access and administrative reporting.",
+      "Secure clinic web application for appointments, patient records, role-based access, and reporting.",
     tech: ["Laravel", "MySQL", "JavaScript", "Bootstrap", "DomPDF"],
     accent: "green",
-    github: "https://github.com/brahim-chahba",
+    cover: "/covers/medical-consultation.svg",
+    github: null,
+    repositoryStatus: "Repository available on request",
   },
   {
-    title: "PFE-Matcher",
+    title: "PFE matcher",
     year: "2025",
-    tags: ["Spring MVC", "Java", "Matching"],
+    tags: ["Spring MVC", "Java", "Backend"],
     summary:
-      "Created a Spring MVC platform for matching final-year engineering students with graduation project opportunities.",
+      "Constraint-aware platform that assigns final-year students to projects based on preferences and capacity.",
     tech: ["Spring MVC", "Java", "MySQL", "Hibernate", "Maven"],
     accent: "amber",
-    github: "https://github.com/brahim-chahba",
+    cover: "/covers/pfe-matcher.svg",
+    github: null,
+    repositoryStatus: "Repository available on request",
   },
 ];
 
 export const skills = [
   {
-    label: "Backend and Software Engineering",
-    items: [
-      { name: "PHP", icon: "https://cdn.simpleicons.org/php/777BB4" },
-      { name: "Laravel", icon: "https://cdn.simpleicons.org/laravel/FF2D20" },
-      { name: "Python", icon: "https://cdn.simpleicons.org/python/3776AB" },
-      { name: "Java", icon: "https://cdn.simpleicons.org/openjdk/EA2D2E" },
-      { name: "C", icon: "https://cdn.simpleicons.org/c/00599C" },
-      { name: "REST APIs", icon: "https://cdn.simpleicons.org/postman/FF6C37" },
-    ],
+    label: "Backend and software engineering",
+    items: ["Java", "Spring Boot", "Spring MVC", "Laravel", "REST APIs", "Hibernate", "Maven"],
   },
   {
     label: "Frontend",
-    items: [
-      { name: "React", icon: "https://cdn.simpleicons.org/react/61DAFB" },
-      { name: "React Native", icon: "https://cdn.simpleicons.org/react/61DAFB" },
-      { name: "JavaScript", icon: "https://cdn.simpleicons.org/javascript/F7DF1E" },
-      { name: "Vite", icon: "https://cdn.simpleicons.org/vite/646CFF" },
-      { name: "Tailwind CSS", icon: "https://cdn.simpleicons.org/tailwindcss/06B6D4" },
-      { name: "Bootstrap", icon: "https://cdn.simpleicons.org/bootstrap/7952B3" },
-    ],
+    items: ["React", "JavaScript", "HTML/CSS", "Vite", "Tailwind CSS", "Bootstrap"],
   },
   {
-    label: "Data and AI",
-    items: [
-      { name: "PyTorch", icon: "https://cdn.simpleicons.org/pytorch/EE4C2C" },
-      { name: "TensorFlow", icon: "https://cdn.simpleicons.org/tensorflow/FF6F00" },
-      { name: "Transformers", icon: "https://cdn.simpleicons.org/huggingface/FFD21E" },
-      { name: "Scikit-learn", icon: "https://cdn.simpleicons.org/scikitlearn/F7931E" },
-      { name: "pandas", icon: "https://cdn.simpleicons.org/pandas/150458" },
-      { name: "NLP", icon: "https://cdn.simpleicons.org/spacy/09A3D5" },
-    ],
+    label: "AI and data",
+    items: ["Python", "PyTorch", "Transformers", "TensorFlow", "Scikit-learn", "pandas", "NLP"],
   },
   {
     label: "Cloud and DevOps",
-    items: [
-      { name: "AWS", icon: "https://cdn.simpleicons.org/amazonaws/232F3E" },
-      { name: "Azure", icon: "https://cdn.simpleicons.org/microsoftazure/0078D4" },
-      { name: "Docker", icon: "https://cdn.simpleicons.org/docker/2496ED" },
-      { name: "Git", icon: "https://cdn.simpleicons.org/git/F05032" },
-      { name: "GitLab CI/CD", icon: "https://cdn.simpleicons.org/gitlab/FC6D26" },
-      { name: "Jira", icon: "https://cdn.simpleicons.org/jira/0052CC" },
-    ],
-  },
-  {
-    label: "Databases and CRM",
-    items: [
-      { name: "PostgreSQL", icon: "https://cdn.simpleicons.org/postgresql/4169E1" },
-      { name: "MySQL", icon: "https://cdn.simpleicons.org/mysql/4479A1" },
-      { name: "MongoDB", icon: "https://cdn.simpleicons.org/mongodb/47A248" },
-      { name: "Odoo", icon: "https://cdn.simpleicons.org/odoo/714B67" },
-      { name: "Data Modeling", icon: "https://cdn.simpleicons.org/databricks/FF3621" },
-      { name: "Agile Scrum", icon: "https://cdn.simpleicons.org/scrumalliance/009FDA" },
-    ],
+    items: ["Azure ML", "AWS", "Docker", "Git/GitHub", "MLflow", "CI/CD", "Model deployment"],
   },
 ];
 
 export const certifications = [
   {
-    title: "Advanced Learning Algorithms",
+    title: "Advanced learning algorithms",
     issuer: "DeepLearning.AI / Coursera",
     year: "2025",
-    image: "https://cdn.simpleicons.org/coursera/0056D2",
-    credentialId: "Published on LinkedIn profile",
     credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
   },
   {
-    title: "Supervised Machine Learning: Regression and Classification",
+    title: "Supervised machine learning: regression and classification",
     issuer: "Stanford Online / Coursera",
     year: "2025",
-    image: "https://cdn.simpleicons.org/coursera/0056D2",
-    credentialId: "Published on LinkedIn profile",
     credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
   },
   {
-    title: "Fraud Detection on Financial Transactions with ML",
+    title: "Fraud detection on financial transactions with ML",
     issuer: "Google Cloud",
     year: "2025",
-    image: "https://cdn.simpleicons.org/googlecloud/4285F4",
-    credentialId: "Published on LinkedIn profile",
     credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
   },
   {
-    title: "Develop Clustering Models with Azure ML Designer",
+    title: "Develop clustering models with Azure ML Designer",
     issuer: "Microsoft Azure",
     year: "2025",
-    image: "https://cdn.simpleicons.org/microsoftazure/0078D4",
-    credentialId: "Published on LinkedIn profile",
     credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
   },
 ];

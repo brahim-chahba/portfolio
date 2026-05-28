@@ -1,0 +1,16 @@
+{
+  "lastScanDate": "2026-05-26",
+  "findings": {
+    "fontStack": "Google Fonts via src/tokens.css (Sora, Manrope)",
+    "palette": "OKLCH tokens in src/tokens.css",
+    "motion": "Custom reveal transitions in src/App.jsx and src/styles.css",
+    "spacing": "4pt semantic token scale in src/tokens.css",
+    "framework": "React + Vite"
+  },
+  "sources": [
+    "src/tokens.css",
+    "src/styles.css",
+    "src/main.jsx",
+    "package.json"
+  ]
+}

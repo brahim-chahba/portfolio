@@ -1,0 +1,62 @@
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+
+:root {
+  color-scheme: light;
+
+  --color-canvas: #f3f4f0;
+  --color-canvas-soft: #ecefe9;
+  --color-surface: #ffffff;
+  --color-ink: #192028;
+  --color-ink-soft: #36414c;
+  --color-ink-muted: #67737d;
+  --color-border: #dde3e0;
+  --color-border-strong: #c9d2ce;
+
+  --color-accent: #2f5b69;
+  --color-accent-soft: #e2ebed;
+  --color-project-a: #d8e6ec;
+  --color-project-b: #dfe8df;
+  --color-project-c: #e8e0d3;
+
+  --font-display: "Instrument Serif", "Times New Roman", serif;
+  --font-body: "Plus Jakarta Sans", "Outfit", "Helvetica Neue", sans-serif;
+  --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-7: 1.75rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-14: 3.5rem;
+  --space-16: 4rem;
+
+  --text-xs: 0.72rem;
+  --text-md: 1rem;
+
+  --container: min(1160px, calc(100% - 2rem));
+  --section-gap: clamp(5rem, 8.8vw, 8.6rem);
+
+  --radius-sm: 0.36rem;
+  --radius-lg: 0.72rem;
+  --radius-xl: 1.1rem;
+
+  --dur-0: 100ms;
+  --dur-1: 160ms;
+  --dur-2: 240ms;
+  --dur-3: 420ms;
+  --dur-4: 620ms;
+  --dur-5: 920ms;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snappy: cubic-bezier(0.2, 0.85, 0.22, 1);
+  --ease-glide: cubic-bezier(0.3, 0.12, 0.12, 1);
+  --focus-ring: 0 0 0 3px rgba(63, 104, 116, 0.24);
+  --scroll-progress: 0;
+}

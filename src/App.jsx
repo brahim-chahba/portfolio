@@ -1,259 +1,550 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   about,
+  capabilities,
   certifications,
   education,
   experience,
-  heroRotatingPhrases,
   navItems,
   projects,
   site,
   skills,
 } from "./content";
 
+const REVEAL_DURATION = 0.54;
+const MotionPreferenceContext = createContext(false);
+const useIsomorphicLayoutEffect = typeof window === "undefined" ? useEffect : useLayoutEffect;
+const revealCallbacks = new Map();
+let revealObserver;
+
+function getRevealObserver() {
+  if (revealObserver) return revealObserver;
+  if (typeof window === "undefined" || typeof window.IntersectionObserver !== "function") return null;
+
+  revealObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+
+        const target = entry.target;
+        const onVisible = revealCallbacks.get(target);
+        if (onVisible) onVisible();
+
+        revealCallbacks.delete(target);
+        revealObserver?.unobserve(target);
+
+        if (revealCallbacks.size === 0 && revealObserver) {
+          revealObserver.disconnect();
+          revealObserver = undefined;
+        }
+      });
+    },
+    { threshold: 0.2 },
+  );
+
+  return revealObserver;
+}
+
+function observeRevealNode(node, onVisible) {
+  const observer = getRevealObserver();
+  if (!observer) {
+    onVisible();
+    return () => {};
+  }
+
+  revealCallbacks.set(node, onVisible);
+  observer.observe(node);
+
+  return () => {
+    revealCallbacks.delete(node);
+    observer.unobserve(node);
+
+    if (revealCallbacks.size === 0 && revealObserver) {
+      revealObserver.disconnect();
+      revealObserver = undefined;
+    }
+  };
+}
+
 function App() {
+  const prefersReducedMotion = usePrefersReducedMotion();
+
   return (
-    <div className="page-shell">
-      <AmbientBackdrop />
-      <SiteNav />
-      <main className="site-main">
-        <Hero />
-        <AboutSection />
-        <ProjectsSection />
-        <ExperienceSection />
-        <EducationSection />
-        <SkillsSection />
-        <CertificationsSection />
-        <ContactSection />
-      </main>
-      <footer className="site-footer">
-        <p>(c) {new Date().getFullYear()} {site.name}</p>
-      </footer>
-    </div>
+    <MotionPreferenceContext.Provider value={prefersReducedMotion}>
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
+
+      <div className="page-shell" id="top">
+        <SiteNav />
+
+        <main className="site-main" id="main-content">
+          <HeroSection />
+          <ProjectsSection />
+          <CapabilitiesSection />
+          <EngineeringSection />
+          <AboutSection />
+          <ContactSection />
+        </main>
+
+        <footer className="site-footer">
+          <div className="site-footer-inner">
+            <p>(c) {new Date().getFullYear()} {site.name}</p>
+            <nav className="footer-links" aria-label="Footer links">
+              <a href={site.github} target="_blank" rel="noopener noreferrer">
+                GitHub
+              </a>
+              <a href={site.linkedin} target="_blank" rel="noopener noreferrer">
+                LinkedIn
+              </a>
+              <a href={site.resume} target="_blank" rel="noopener noreferrer">
+                Resume
+              </a>
+            </nav>
+          </div>
+        </footer>
+      </div>
+    </MotionPreferenceContext.Provider>
   );
 }
 
 function SiteNav() {
   const [scrolled, setScrolled] = useState(false);
+  const [activeHash, setActiveHash] = useState("#hero");
+  const [menuOpen, setMenuOpen] = useState(false);
+  const navToggleRef = useRef(null);
+  const navPanelRef = useRef(null);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const root = document.documentElement;
+    let frame = 0;
+    let lastProgress = -1;
+
+    const updateFromScroll = () => {
+      const scrollTop = window.scrollY || root.scrollTop;
+      const maxScroll = root.scrollHeight - window.innerHeight;
+      const progress = maxScroll > 0 ? Math.min(1, Math.max(0, scrollTop / maxScroll)) : 0;
+      const rounded = Math.round(progress * 1000) / 1000;
+
+      if (rounded !== lastProgress) {
+        root.style.setProperty("--scroll-progress", rounded.toFixed(3));
+        lastProgress = rounded;
+      }
+
+      setScrolled((previous) => {
+        const next = scrollTop > 20;
+        return previous === next ? previous : next;
+      });
+    };
+
+    const requestUpdate = () => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        updateFromScroll();
+      });
+    };
+
+    updateFromScroll();
+    window.addEventListener("scroll", requestUpdate, { passive: true });
+    window.addEventListener("resize", requestUpdate);
+
+    return () => {
+      window.removeEventListener("scroll", requestUpdate);
+      window.removeEventListener("resize", requestUpdate);
+      if (frame) {
+        window.cancelAnimationFrame(frame);
+      }
+      root.style.setProperty("--scroll-progress", "0");
+    };
   }, []);
 
+  useEffect(() => {
+    const ids = navItems.map((item) => item.href.replace("#", ""));
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((section) => section instanceof HTMLElement);
+
+    if (sections.length === 0) return undefined;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visibleEntries = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visibleEntries.length > 0) {
+          const currentId = visibleEntries[0].target.id;
+          setActiveHash(`#${currentId}`);
+        }
+      },
+      {
+        threshold: [0.2, 0.35, 0.55],
+        rootMargin: "-34% 0px -52% 0px",
+      },
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const closeOnDesktop = () => {
+      if (window.innerWidth > 760) {
+        setMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", closeOnDesktop);
+    return () => window.removeEventListener("resize", closeOnDesktop);
+  }, []);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+
+    const getFocusableNodes = () => {
+      const toggle = navToggleRef.current;
+      const links = Array.from(navPanelRef.current?.querySelectorAll("a[href]") ?? []);
+      return [toggle, ...links].filter((node) => node instanceof HTMLElement);
+    };
+
+    const onEscape = (event) => {
+      if (event.key !== "Escape") return;
+      setMenuOpen(false);
+      navToggleRef.current?.focus();
+    };
+
+    const onKeydown = (event) => {
+      if (event.key === "Escape") {
+        onEscape(event);
+        return;
+      }
+
+      if (event.key !== "Tab" || window.innerWidth > 760) return;
+
+      const focusable = getFocusableNodes();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    window.addEventListener("keydown", onKeydown);
+
+    const firstLink = navPanelRef.current?.querySelector("a");
+    firstLink?.focus() ?? navToggleRef.current?.focus();
+
+    return () => window.removeEventListener("keydown", onKeydown);
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return undefined;
+
+    if (menuOpen && window.innerWidth <= 760) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
   return (
-    <header className={`site-header${scrolled ? " site-header-scrolled" : ""}`}>
+    <header className={`site-header${scrolled ? " site-header-scrolled" : ""}${menuOpen ? " site-header-menu-open" : ""}`}>
       <div className="site-header-inner">
         <a className="brand" href="#top" aria-label="Home">
-          <span className="brand-mark">{site.initials || "BC"}</span>
+          <span className="brand-mark">
+            <img src="/bc-logo.png" alt={`${site.name} logo`} loading="eager" />
+          </span>
           <span className="brand-copy">
             <strong>{site.name}</strong>
             <span>{site.role}</span>
           </span>
         </a>
-        <nav className="site-nav" aria-label="Primary navigation">
+
+        <button
+          ref={navToggleRef}
+          type="button"
+          className="nav-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="primary-nav"
+          aria-label={menuOpen ? "Close navigation menu" : "Open navigation menu"}
+          onClick={() => setMenuOpen((open) => !open)}
+        >
+          {menuOpen ? "Close" : "Menu"}
+        </button>
+
+        <nav
+          ref={navPanelRef}
+          className={`site-nav${menuOpen ? " is-open" : ""}`}
+          id="primary-nav"
+          aria-label="Primary navigation"
+        >
           {navItems.map((item) => (
-            <a key={item.label} href={item.href}>
+            <a
+              key={item.label}
+              href={item.href}
+              aria-current={activeHash === item.href ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+            >
               {item.label}
             </a>
           ))}
         </nav>
+
+        <button
+          type="button"
+          className={`nav-backdrop${menuOpen ? " is-open" : ""}`}
+          tabIndex={-1}
+          aria-label="Close navigation menu"
+          onClick={() => {
+            setMenuOpen(false);
+            navToggleRef.current?.focus();
+          }}
+        />
       </div>
     </header>
   );
 }
 
-function Hero() {
-  const [phraseIndex, setPhraseIndex] = useState(0);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setPhraseIndex((current) => (current + 1) % heroRotatingPhrases.length);
-        setIsTransitioning(false);
-      }, 150);
-    }, 2600);
-
-    return () => window.clearInterval(timer);
-  }, []);
+function HeroSection() {
+  const heroSignals = [
+    { label: "Projects", value: `${projects.length}+ shipped case studies` },
+    { label: "Primary focus", value: "AI systems + backend APIs" },
+    { label: "Open for", value: "Internship and freelance collaboration" },
+  ];
 
   return (
-    <section className="hero section" id="top">
+    <section className="section hero" id="hero" aria-labelledby="hero-heading">
       <div className="hero-content">
         <Reveal>
-          <p className="hero-eyebrow">ENSAH | Digital Transformation and AI Track</p>
+          <p className="hero-kicker">Portfolio</p>
         </Reveal>
 
-        <Reveal delay={0.04}>
-          <h1 className="hero-title">
-            Building reliable{" "}
-            <span
-              className="accent-phrase"
-              style={{
-                opacity: isTransitioning ? 0 : 1,
-                filter: isTransitioning ? "blur(4px)" : "blur(0px)",
-                transition:
-                  "opacity 0.2s cubic-bezier(0.23, 1, 0.32, 1), filter 0.2s cubic-bezier(0.23, 1, 0.32, 1)",
-              }}
-            >
-              {heroRotatingPhrases[phraseIndex]}
-            </span>{" "}
-            for real teams.
+        <Reveal delay={0.035} duration={0.62} distance={14}>
+          <h1 className="hero-title" id="hero-heading">
+            Practical AI products, resilient backend systems, and clean delivery.
           </h1>
         </Reveal>
 
-        <Reveal delay={0.08}>
-          <p className="hero-body">{site.intro}</p>
+        <Reveal delay={0.085} duration={0.62} distance={14}>
+          <p className="hero-description">{site.intro}</p>
         </Reveal>
 
-        <Reveal delay={0.12}>
+        <Reveal delay={0.11} duration={0.56}>
+          <p className="hero-meta-line">
+            {site.role} / {site.location}
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.13} duration={0.56}>
           <div className="hero-actions">
-            <a className="button button-primary" href="#projects">
-              View projects
+            <a className="button button-primary" href="#work">
+              View work
             </a>
-            <a className="button button-secondary" href="#contact">
-              Contact me
-            </a>
-            <a
-              className="button button-ghost"
-              href={site.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
+            <a className="button-link" href={site.resume} target="_blank" rel="noopener noreferrer">
               Resume
             </a>
           </div>
         </Reveal>
 
-        <Reveal delay={0.16}>
-          <div className="hero-socials">
-            <SocialLink href={site.github} label="GitHub" type="github" />
-            <SocialLink href={site.linkedin} label="LinkedIn" type="linkedin" />
-            <SocialLink href={`mailto:${site.email}`} label="Email" type="email" />
+        <Reveal delay={0.15} duration={0.56}>
+          <div className="hero-links-row" aria-label="Profile links">
+            <a className="hero-inline-link" href={`mailto:${site.email}`}>
+              Email
+            </a>
+            <a className="hero-inline-link" href={site.github} target="_blank" rel="noopener noreferrer">
+              GitHub
+            </a>
+            <a className="hero-inline-link" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+              LinkedIn
+            </a>
           </div>
+        </Reveal>
+
+        <Reveal delay={0.19} duration={0.6} distance={10}>
+          <ul className="hero-proof-grid" aria-label="Quick profile highlights">
+            {heroSignals.map((item) => (
+              <li key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </li>
+            ))}
+          </ul>
         </Reveal>
       </div>
 
-      <Reveal delay={0.1}>
+      <Reveal delay={0.14} duration={0.66} distance={16}>
         <div className="hero-visual">
-          <img
-            src="/me-white-removebg-preview.png"
-            alt={`Portrait illustration of ${site.name}`}
-            width="460"
-            height="460"
-            loading="eager"
-          />
+          <div className="portrait-stage">
+            <img
+              src="/me-white-removebg-preview.png"
+              alt={`Portrait of ${site.name}`}
+              width="520"
+              height="520"
+              loading="eager"
+            />
+          </div>
         </div>
       </Reveal>
     </section>
   );
 }
 
+function ProjectsSection() {
+  const isEmpty = projects.length === 0;
+
+  return (
+    <section className="section" id="work" aria-labelledby="work-heading">
+      <Reveal>
+        <SectionHeader
+          index="01"
+          id="work-heading"
+          kicker="Selected work"
+          title="Engineering case studies with clear architecture and delivery outcomes."
+        />
+      </Reveal>
+
+      {isEmpty ? (
+        <Reveal delay={0.06}>
+          <div className="empty-state" role="status" aria-live="polite">
+            <h3>Projects are being prepared.</h3>
+            <p>Case studies will be added soon.</p>
+          </div>
+        </Reveal>
+      ) : (
+        <div className="projects-grid">
+          {projects.map((project, index) => {
+            const previewTech = project.tech.slice(0, 3).join(" / ");
+            const previewTags = project.tags.slice(0, 2).join(" / ");
+            const previewMeta = `${previewTags} / ${project.year}`;
+            const motionDelay = 0.04 + index * 0.06;
+            const projectCover = project.cover ?? "/covers/fake-news-azure.svg";
+            const reverseLayout = index % 2 !== 0;
+
+            return (
+              <Reveal key={project.title} delay={motionDelay} duration={0.6} distance={12}>
+                <article className={`project-card accent-${project.accent}${reverseLayout ? " is-reverse" : ""}`}>
+                  <div className="project-thumbnail">
+                    <img
+                      src={projectCover}
+                      alt={`${project.title} visual cover`}
+                      loading="lazy"
+                      className="project-cover-image"
+                    />
+                  </div>
+
+                  <div className="project-body">
+                    <div className="project-meta-row">
+                      <p className="project-meta-line">{previewMeta}</p>
+                    </div>
+
+                    <div className="project-head">
+                      <h3>{project.title}</h3>
+                      <p>{project.summary}</p>
+                    </div>
+
+                    <div className="project-footer">
+                      <p className="project-tech-line">{previewTech}</p>
+                      {project.github && (
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="project-link"
+                          aria-label={`View ${project.title} repository`}
+                        >
+                          View repository
+                        </a>
+                      )}
+                      {!project.github && project.repositoryStatus && (
+                        <p className="project-repo-note" aria-label={`Repository status: ${project.repositoryStatus}`}>
+                          {project.repositoryStatus}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              </Reveal>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  );
+}
+
 function AboutSection() {
   return (
-    <section className="section" id="about">
-      <Reveal>
-        <SectionHeading
-          kicker="About"
-          title="A practical builder focused on impact and technical quality."
-        />
-      </Reveal>
-      <div className="about-content">
-        {about.paragraphs.map((paragraph, index) => (
-          <Reveal key={paragraph} delay={index * 0.06}>
-            <p className="about-paragraph">{paragraph}</p>
-          </Reveal>
-        ))}
+    <section className="section about" id="about" aria-labelledby="about-heading">
+      <div className="about-layout">
+        <Reveal>
+          <div className="about-main">
+            <p className="kicker">
+              <span className="section-index">04</span> About
+            </p>
+            <h2 id="about-heading">{about.heading}</h2>
+            <div className="about-copy">
+              {about.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        <Reveal delay={0.08}>
+          <ul className="about-facts" aria-label="Profile facts">
+            {about.facts.map((fact) => (
+              <li key={fact.label}>
+                <span>{fact.label}</span>
+                <strong>{fact.value}</strong>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-function ProjectsSection() {
+function CapabilitiesSection() {
   return (
-    <section className="section section-projects" id="projects">
+    <section className="section" id="capabilities" aria-labelledby="capabilities-heading">
       <Reveal>
-        <SectionHeading
-          kicker="Projects"
-          title="Selected work spanning AI engineering and full-stack delivery."
+        <SectionHeader
+          index="02"
+          id="capabilities-heading"
+          kicker="Services"
+          title="What I can design, build, and deliver end-to-end."
+          body="Three focused collaboration tracks built for practical engineering outcomes."
         />
       </Reveal>
 
-      <div className="projects-grid">
-        {projects.map((project, index) => (
-          <Reveal key={project.title} delay={index * 0.06}>
-            <article className={`project-card paper-card accent-${project.accent}`}>
-              <div className="project-placeholder">
-                <small>Case study</small>
-                <span>{project.year}</span>
-              </div>
-              <div className="project-copy">
-                <div className="project-meta">
-                  {project.tags.map((tag) => (
-                    <span key={tag}>{tag}</span>
-                  ))}
-                </div>
-                <h3>{project.title}</h3>
-                <p>{project.summary}</p>
-                <div className="project-tech">
-                  {project.tech.map((tech) => (
-                    <span key={tech}>{tech}</span>
-                  ))}
-                </div>
-                {project.github && (
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="project-link"
-                  >
-                    View on GitHub
-                  </a>
-                )}
-              </div>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function ExperienceSection() {
-  return (
-    <section className="section" id="experience">
-      <Reveal>
-        <SectionHeading
-          kicker="Experience"
-          title="Hands-on internship and project experience from my CV."
-        />
-      </Reveal>
-
-      <div className="list-stack">
-        {experience.map((item, index) => (
-          <Reveal key={`${item.company}-${item.role}`} delay={index * 0.06}>
-            <article className="experience-card">
-              <div className="experience-period">{item.period}</div>
-              <div className="experience-copy">
-                <h3>
-                  {item.role} <span>@ {item.company}</span>
-                </h3>
-                <p>{item.summary}</p>
-                <ul className="experience-list">
-                  {item.bullets.map((point) => (
-                    <li key={point}>{point}</li>
+      <div className="capability-grid">
+        {capabilities.map((item, index) => (
+          <Reveal key={item.title} delay={0.04 + index * 0.05} duration={0.58} distance={10}>
+            <article className="capability-card">
+              <p className="meta-label">{`0${index + 1}`}</p>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+              <p className="capability-line">{item.chips.join(" / ")}</p>
+              {item.deliverables?.length > 0 && (
+                <ul className="capability-deliverables" aria-label={`${item.title} deliverables`}>
+                  {item.deliverables.slice(0, 2).map((deliverable) => (
+                    <li key={deliverable}>{deliverable}</li>
                   ))}
                 </ul>
-                <div className="experience-tech">
-                  {item.tech.map((tech) => (
-                    <span key={tech}>{tech}</span>
-                  ))}
-                </div>
-              </div>
+              )}
             </article>
           </Reveal>
         ))}
@@ -262,97 +553,106 @@ function ExperienceSection() {
   );
 }
 
-function EducationSection() {
+function EngineeringSection() {
+  const stackSummary = skills
+    .slice(0, 3)
+    .map((group) => `${group.label}: ${group.items.slice(0, 3).join(", ")}`);
+  const visibleCertifications = certifications.slice(0, 2);
+  const experienceHighlights = experience.flatMap((item) => item.bullets).slice(0, 3);
+
   return (
-    <section className="section" id="education">
+    <section className="section" id="engineering" aria-labelledby="engineering-heading">
       <Reveal>
-        <SectionHeading
-          kicker="Education"
-          title="Current engineering path in digital transformation and AI."
+        <SectionHeader
+          index="03"
+          id="engineering-heading"
+          kicker="Engineering"
+          title="Practical engineering background across software, AI, and cloud."
         />
       </Reveal>
 
-      <div className="education-grid">
-        {education.map((item, index) => (
-          <Reveal key={item.school} delay={index * 0.06}>
-            <article className="paper-card education-card">
-              <p className="education-period">{item.period}</p>
-              <h3>{item.degree}</h3>
-              <p className="education-school">{item.school}</p>
-              <p className="education-details">{item.details}</p>
-            </article>
-          </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
+      <div className="engineering-flow">
+        <Reveal delay={0.04}>
+          <article className="engineering-unit">
+            <h3>Experience</h3>
+            <div className="timeline-list">
+              {experience.map((item) => (
+                <article key={`${item.company}-${item.role}`} className="timeline-item">
+                  <p className="meta-label">{item.period}</p>
+                  <h4>
+                    {item.role} <span>@ {item.company}</span>
+                  </h4>
+                  <p>{item.summary}</p>
+                  <ul>
+                    {item.bullets.slice(0, 2).map((point) => (
+                      <li key={point}>{point}</li>
+                    ))}
+                  </ul>
+                </article>
+              ))}
+            </div>
+          </article>
+        </Reveal>
 
-function SkillsSection() {
-  return (
-    <section className="section section-skills" id="skills">
-      <Reveal>
-        <SectionHeading
-          kicker="Skills"
-          title="Every skill now includes a visual icon for faster scanning."
-        />
-      </Reveal>
-
-      <div className="skills-grid">
-        {skills.map((group, index) => (
-          <Reveal key={group.label} delay={index * 0.05}>
-            <article className="skill-card paper-card">
-              <p className="skill-label">{group.label}</p>
-              <div className="skill-pills">
-                {group.items.map((item) => (
-                  <div className="skill-pill" key={`${group.label}-${item.name}`}>
-                    <LogoImage src={item.icon} label={item.name} />
-                    <span>{item.name}</span>
-                  </div>
+        <div className="engineering-secondary">
+          <Reveal delay={0.08}>
+            <article className="engineering-unit">
+              <h3>Core stack</h3>
+              <div className="stack-summary">
+                {stackSummary.map((line) => (
+                  <p key={line} className="stack-summary-line">
+                    {line}
+                  </p>
                 ))}
               </div>
             </article>
           </Reveal>
-        ))}
-      </div>
-    </section>
-  );
-}
 
-function CertificationsSection() {
-  return (
-    <section className="section section-certs" id="certifications">
-      <Reveal>
-        <SectionHeading
-          kicker="Certifications"
-          title="Credential cards with image, issuer, and LinkedIn reference."
-        />
-      </Reveal>
-
-      <div className="certifications-grid">
-        {certifications.map((cert, index) => (
-          <Reveal key={cert.title} delay={index * 0.04}>
-            <article className="cert-card paper-card">
-              <div className="cert-logo">
-                <LogoImage src={cert.image} label={cert.issuer} />
-              </div>
-              <div className="cert-card-text">
-                <p className="cert-year">{cert.year}</p>
-                <h3>{cert.title}</h3>
-                <p>{cert.issuer}</p>
-                <p className="cert-id">{cert.credentialId}</p>
-                <a
-                  href={cert.credentialUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="cert-verify"
-                >
-                  Verify on LinkedIn
-                </a>
+          <Reveal delay={0.12}>
+            <article className="engineering-unit">
+              <h3>Education</h3>
+              <div className="timeline-list">
+                {education.map((item) => (
+                  <article key={item.school} className="timeline-item">
+                    <p className="meta-label">{item.period}</p>
+                    <h4>{item.degree}</h4>
+                    <p>{item.school}</p>
+                    <p>{item.details}</p>
+                  </article>
+                ))}
               </div>
             </article>
           </Reveal>
-        ))}
+
+          <Reveal delay={0.16}>
+            <article className="engineering-unit">
+              <h3>Delivery highlights</h3>
+              <ul className="highlight-list">
+                {experienceHighlights.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+            </article>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <article className="engineering-unit">
+              <h3>Certifications</h3>
+              <div className="cert-list">
+                {visibleCertifications.map((cert) => (
+                  <article key={cert.title} className="cert-item">
+                    <p className="meta-label">{cert.year}</p>
+                    <h4>{cert.title}</h4>
+                    <p>{cert.issuer}</p>
+                    <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="cert-link">
+                      Verify
+                    </a>
+                  </article>
+                ))}
+              </div>
+            </article>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -360,160 +660,142 @@ function CertificationsSection() {
 
 function ContactSection() {
   return (
-    <section className="section contact-section" id="contact">
+    <section className="section" id="contact" aria-labelledby="contact-heading">
       <Reveal>
-        <div className="contact-card paper-card">
-          <p className="kicker">Contact</p>
-          <h2>Open to internship and freelance opportunities.</h2>
-          <p>
-            If your team is building in AI, full-stack systems, or cloud platforms, I would
-            love to connect.
-          </p>
-          <ul className="contact-list">
-            <li>{site.email}</li>
-            <li>{site.phone}</li>
-            <li>{site.location}</li>
-          </ul>
-          <div className="contact-actions">
-            <a className="button button-primary" href={`mailto:${site.email}`}>
-              Email me
-            </a>
-            <a
-              className="button button-secondary"
-              href={site.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              LinkedIn
-            </a>
-            <a
-              className="button button-ghost"
-              href={site.resume}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Resume
-            </a>
+        <article className="contact-card">
+          <div className="contact-grid">
+            <div className="contact-main">
+              <p className="kicker">
+                <span className="section-index">05</span> Contact
+              </p>
+              <h2 id="contact-heading">Open to internship and freelance collaboration.</h2>
+            </div>
+
+            <div className="contact-side">
+              <ul className="contact-list">
+                <li>
+                  <span>Email</span>
+                  <strong>
+                    <a
+                      href={`mailto:${site.email}`}
+                      className="contact-value-link"
+                      aria-label={`Send email to ${site.email}`}
+                    >
+                      {site.email}
+                    </a>
+                  </strong>
+                </li>
+                <li>
+                  <span>Phone</span>
+                  <strong>
+                    <a
+                      href={`tel:${site.phone.replace(/\s+/g, "")}`}
+                      className="contact-value-link"
+                      aria-label={`Call ${site.phone}`}
+                    >
+                      {site.phone}
+                    </a>
+                  </strong>
+                </li>
+                <li>
+                  <span>Location</span>
+                  <strong>{site.location}</strong>
+                </li>
+              </ul>
+
+              <div className="contact-actions">
+                <a className="button button-primary" href={`mailto:${site.email}`}>
+                  Email me
+                </a>
+                <a className="contact-inline-link" href={site.linkedin} target="_blank" rel="noopener noreferrer">
+                  LinkedIn
+                </a>
+                <a className="contact-inline-link" href={site.resume} target="_blank" rel="noopener noreferrer">
+                  Resume
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
+        </article>
       </Reveal>
     </section>
   );
 }
 
-function SocialLink({ href, label, type }) {
+function SectionHeader({ id, index, kicker, title, body }) {
   return (
-    <a
-      href={href}
-      target={href.startsWith("mailto:") ? undefined : "_blank"}
-      rel={href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-      className="social-link"
-      aria-label={label}
-    >
-      {type === "github" && (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 0a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.24c-3.34.73-4.04-1.42-4.04-1.42a3.18 3.18 0 0 0-1.33-1.76c-1.1-.74.08-.73.08-.73a2.53 2.53 0 0 1 1.85 1.24 2.6 2.6 0 0 0 3.55 1 2.6 2.6 0 0 1 .78-1.63c-2.67-.3-5.47-1.34-5.47-5.96a4.67 4.67 0 0 1 1.24-3.25 4.33 4.33 0 0 1 .12-3.2s1-.32 3.3 1.24a11.36 11.36 0 0 1 6 0c2.28-1.56 3.3-1.24 3.3-1.24a4.33 4.33 0 0 1 .12 3.2 4.67 4.67 0 0 1 1.24 3.25c0 4.63-2.81 5.66-5.49 5.95a2.9 2.9 0 0 1 .82 2.24v3.32c0 .32.22.7.83.58A12 12 0 0 0 12 0Z" />
-        </svg>
-      )}
-      {type === "linkedin" && (
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M22.23 0H1.77A1.77 1.77 0 0 0 0 1.77v20.46C0 23.21.79 24 1.77 24h20.46A1.77 1.77 0 0 0 24 22.23V1.77A1.77 1.77 0 0 0 22.23 0ZM7.12 20.45H3.56V9h3.56Zm-1.78-13a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.34V9h3.42v1.56h.05a3.75 3.75 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46Z" />
-        </svg>
-      )}
-      {type === "email" && (
-        <svg
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="2" y="4" width="20" height="16" rx="2" />
-          <path d="m22 7-10 7L2 7" />
-        </svg>
-      )}
-      <span>{label}</span>
-    </a>
-  );
-}
-
-function LogoImage({ src, label }) {
-  const [failed, setFailed] = useState(false);
-  const initials = label
-    .split(" ")
-    .map((part) => part[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-
-  if (!src || failed) {
-    return <span className="logo-fallback">{initials}</span>;
-  }
-
-  return (
-    <img
-      src={src}
-      alt={`${label} logo`}
-      loading="lazy"
-      onError={() => setFailed(true)}
-      className="logo-image"
-    />
-  );
-}
-
-function SectionHeading({ kicker, title }) {
-  return (
-    <div className="section-heading">
-      <p className="kicker">{kicker}</p>
-      <h2>{title}</h2>
+    <div className="section-header">
+      <p className="kicker">
+        {index && <span className="section-index">{index}</span>} {kicker}
+      </p>
+      <h2 id={id}>{title}</h2>
+      {body && <p className="section-body">{body}</p>}
     </div>
   );
 }
 
-function AmbientBackdrop() {
-  return (
-    <div className="backdrop" aria-hidden="true">
-      <div className="backdrop-orb backdrop-orb-one" />
-      <div className="backdrop-orb backdrop-orb-two" />
-      <div className="backdrop-scribble backdrop-scribble-one" />
-      <div className="backdrop-scribble backdrop-scribble-two" />
-    </div>
-  );
-}
-
-function Reveal({ children, delay = 0 }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
+function usePrefersReducedMotion() {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") {
+      return false;
+    }
+    return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  });
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: "-24px" },
-    );
+    if (typeof window === "undefined" || typeof window.matchMedia !== "function") return undefined;
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+
+    if (typeof mediaQuery.addEventListener === "function") {
+      mediaQuery.addEventListener("change", updatePreference);
+      return () => mediaQuery.removeEventListener("change", updatePreference);
     }
 
-    return () => observer.disconnect();
+    mediaQuery.addListener(updatePreference);
+    return () => mediaQuery.removeListener(updatePreference);
   }, []);
+
+  return prefersReducedMotion;
+}
+
+function Reveal({ children, delay = 0, distance = 10, duration = REVEAL_DURATION }) {
+  const revealRef = useRef(null);
+  const prefersReducedMotion = useContext(MotionPreferenceContext);
+  const [isVisible, setIsVisible] = useState(prefersReducedMotion);
+
+  useIsomorphicLayoutEffect(() => {
+    if (prefersReducedMotion || isVisible) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    const node = revealRef.current;
+    if (!node) return undefined;
+
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+    const rect = node.getBoundingClientRect();
+    const likelyInView = rect.top < viewportHeight * 0.92 && rect.bottom > 0;
+
+    if (likelyInView) {
+      setIsVisible(true);
+      return undefined;
+    }
+
+    return observeRevealNode(node, () => setIsVisible(true));
+  }, [prefersReducedMotion, isVisible]);
 
   return (
     <div
-      ref={ref}
+      ref={revealRef}
+      className={`reveal${isVisible ? " is-visible" : ""}${prefersReducedMotion ? " is-reduced" : ""}`}
       style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(14px)",
-        transition: `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${delay}s`,
+        "--reveal-delay": `${delay}s`,
+        "--reveal-distance": `${distance}px`,
+        "--reveal-duration": `${duration}s`,
       }}
     >
       {children}
