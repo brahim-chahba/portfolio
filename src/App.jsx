@@ -39,7 +39,6 @@ function App() {
         <footer className="site-footer">
           <div className="site-footer-inner">
             <p>© {new Date().getFullYear()} {site.name}</p>
-            <p>Designed and built in Agadir, Morocco.</p>
           </div>
         </footer>
       </div>
@@ -136,7 +135,7 @@ function HeroSection() {
     <section className="hero section-shell" id="hero" aria-labelledby="hero-heading">
       <div className="hero-copy">
         <Reveal>
-          <p className="eyebrow"><span /> AI × BACKEND × CLOUD</p>
+          <p className="eyebrow"><span /> AI × NLP × LLMs × MLOps</p>
         </Reveal>
         <Reveal delay={0.05}>
           <h1 id="hero-heading">I turn complex systems into <em>useful products.</em></h1>
@@ -153,7 +152,7 @@ function HeroSection() {
         <Reveal delay={0.18}>
           <div className="hero-meta">
             <span>Based in {site.location}</span>
-            <span className="availability"><i /> Available for opportunities</span>
+            <span className="availability"><i /> Looking for a PFE internship</span>
           </div>
         </Reveal>
       </div>
@@ -165,7 +164,7 @@ function HeroSection() {
           <div className="portrait-card">
             <p>FIG. 01 / BUILDER</p>
             <img src="/me-white-removebg-preview.png" alt={`Portrait of ${site.name}`} width="520" height="520" />
-            <span>AGADIR / MOROCCO</span>
+            <span>SIDI IFNI / MOROCCO</span>
           </div>
         </div>
       </Reveal>
@@ -189,6 +188,12 @@ function ExperienceSection() {
                 <ul className="detail-list">
                   {item.bullets.map((point) => <li key={point}>{point}</li>)}
                 </ul>
+                <div className="experience-stack" aria-label={`${item.company} technology stack`}>
+                  <span>Stack</span>
+                  <ul>
+                    {item.tech.map((technology) => <li key={technology}>{technology}</li>)}
+                  </ul>
+                </div>
               </div>
             </article>
           </Reveal>
@@ -228,8 +233,12 @@ function ProjectsSection() {
         {projects.map((project, index) => (
           <Reveal key={project.title} delay={index * 0.05}>
             <article className="project-card">
-              <div className="project-cover">
-                <img src={project.cover} alt="" width="640" height="360" />
+              <div className={`project-cover${project.cover ? "" : " project-cover-type"}`}>
+                {project.cover ? (
+                  <img src={project.cover} alt="" width="640" height="360" />
+                ) : (
+                  <p aria-hidden="true">{project.title}</p>
+                )}
                 <span>{String(index + 1).padStart(2, "0")} / {project.year}</span>
               </div>
               <div className="project-body">
@@ -241,11 +250,16 @@ function ProjectsSection() {
                 <ul className="project-tech" aria-label={`${project.title} technologies`}>
                   {project.tech.map((item) => <li key={item}>{item}</li>)}
                 </ul>
-                {project.github ? (
-                  <a className="project-link" href={project.github} target="_blank" rel="noopener noreferrer">View repository ↗</a>
-                ) : (
-                  <span className="project-status">{project.repositoryStatus}</span>
-                )}
+                <div className="project-links">
+                  {project.github ? (
+                    <a className="project-link" href={project.github} target="_blank" rel="noopener noreferrer">View repository ↗</a>
+                  ) : (
+                    <span className="project-status">{project.repositoryStatus}</span>
+                  )}
+                  {project.liveUrl && (
+                    <a className="project-link" href={project.liveUrl} target="_blank" rel="noopener noreferrer">Live project ↗</a>
+                  )}
+                </div>
               </div>
             </article>
           </Reveal>
@@ -289,7 +303,11 @@ function CertificationsSection() {
                 <p>{cert.issuer}</p>
               </div>
               <span className="cert-year">{cert.year}</span>
-              <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">Verify ↗</a>
+              {cert.credentialUrl ? (
+                <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">Verify ↗</a>
+              ) : (
+                <span className="cert-status" aria-label="No public credential link">—</span>
+              )}
             </article>
           </Reveal>
         ))}

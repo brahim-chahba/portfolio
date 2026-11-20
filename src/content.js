@@ -1,14 +1,14 @@
 export const site = {
   name: "Brahim Chahba",
-  role: "AI and Backend Engineering Student",
+  role: "AI / Machine Learning Engineer",
   email: "brahimchahba9@gmail.com",
   phone: "+212 6 59 52 29 99",
-  location: "Agadir, Morocco",
+  location: "Sidi Ifni, Morocco",
   github: "https://github.com/brahim-chahba",
   linkedin: "https://www.linkedin.com/in/brahimchahba/",
   resume: "/Brahim_Chahba_CV.pdf",
   intro:
-    "I build practical AI, backend, and cloud products with clean architecture and production-ready execution.",
+    "I develop and deploy machine-learning and NLP systems, from semantic recommendation engines and transformer fine-tuning to RAG applications and production APIs.",
 };
 
 export const navItems = [
@@ -24,109 +24,141 @@ export const navItems = [
 ];
 
 export const about = {
-  heading: "Fourth-year engineering student focused on practical AI and backend systems.",
+  heading: "Final-year engineering student building practical AI systems from model to product.",
   paragraphs: [
-    "At ENSAH, I build software that combines AI features, backend services, and cloud delivery under real project constraints.",
-    "I am currently open to internship and freelance collaborations where I can contribute architecture, implementation, and delivery end-to-end.",
+    "At ENSAH, I focus on AI and digital transformation while building production-oriented NLP, LLM, recommendation, and data systems.",
+    "My work spans model fine-tuning, semantic search, RAG, FastAPI services, vector databases, cloud deployment, and the data pipelines that keep these products reliable.",
   ],
   facts: [
-    { label: "Base", value: "Agadir, Morocco" },
-    { label: "Education", value: "ENSAH, fourth year (2022-2027)" },
-    { label: "Focus", value: "AI features, backend architecture, cloud deployment" },
-    { label: "Availability", value: "Internships and freelance projects" },
+    { label: "Base", value: "Sidi Ifni, Morocco" },
+    { label: "Education", value: "ENSAH, State Engineering Degree (expected 2027)" },
+    { label: "Focus", value: "NLP, LLMs, RAG, recommendation systems, and MLOps" },
+    { label: "Languages", value: "Arabic, English, French, and basic Spanish" },
   ],
 };
 
-export const capabilities = [
-  {
-    title: "AI feature delivery",
-    body: "From model experimentation to production inference APIs with measurable evaluation.",
-    chips: ["NLP", "Transformers", "PyTorch", "Azure ML"],
-    deliverables: ["Fine-tuned models", "Managed endpoints", "Evaluation pipelines"],
-  },
-  {
-    title: "Backend and API systems",
-    body: "Structured backend services with role boundaries, authentication, and maintainable API architecture.",
-    chips: ["Spring Boot", "Spring MVC", "Laravel", "MySQL"],
-    deliverables: ["API design", "Auth and RBAC", "Database normalization"],
-  },
-  {
-    title: "Cloud and data pipelines",
-    body: "Reproducible data and training workflows translated into deployable cloud artifacts.",
-    chips: ["Azure ML", "Docker", "Python", "MLflow"],
-    deliverables: ["Orchestrated pipelines", "Containerized workflows", "Deployment automation"],
-  },
-];
-
 export const education = [
   {
-    period: "2022 - 2027",
-    school: "Ecole Nationale des Sciences Appliquees d'Al Hoceima (ENSAH)",
-    degree: "State engineering degree in digital transformation and AI",
-    details: "Specialization in software engineering, machine learning, and cloud delivery.",
+    period: "2022 — 2027 (expected)",
+    school: "National School of Applied Sciences of Al Hoceima (ENSAH)",
+    degree: "State Engineering Degree — Digital Transformation & Artificial Intelligence",
+    details: "Al Hoceima, Morocco",
   },
 ];
 
 export const experience = [
   {
-    period: "Jul 2025 - Aug 2025",
-    role: "Full-stack developer intern",
-    company: "CQPM Boujdour",
+    period: "Jul — Aug 2026",
+    role: "AI Engineering Intern",
+    company: "JobAiro",
     summary:
-      "Built an academic administration platform for trainee records, attendance, modules, and grading.",
+      "Built and integrated an NLP-powered candidate-to-job recommendation system for a SaaS platform.",
     bullets: [
-      "Delivered end-to-end workflows for trainee records, modules, attendance, and grading.",
-      "Implemented Excel import-export and PDF document generation for administrative reporting.",
-      "Handled backend architecture, database design, and user-facing UI under real delivery constraints.",
+      "Developed an NLP pipeline to extract and structure skills, experience, and qualifications from candidate profiles and job descriptions.",
+      "Engineered a hybrid recommendation system combining Sentence Transformers, semantic embeddings, and keyword retrieval to rank candidate-job matches.",
+      "Deployed the recommendation engine through FastAPI REST APIs backed by PostgreSQL and pgvector.",
     ],
+    tech: ["Python", "FastAPI", "Sentence Transformers", "PostgreSQL", "pgvector", "REST APIs"],
+  },
+  {
+    period: "Jul — Aug 2025",
+    role: "Software Engineering Intern",
+    company: "Ministry of Agriculture and Maritime Fisheries",
+    summary:
+      "Digitized administrative workflows for more than 200 trainees with a Laravel and MySQL management platform.",
+    bullets: [
+      "Developed attendance tracking, grade management, and data-export workflows for 200+ trainees.",
+      "Reduced manual data-entry time by 80% through workflow digitization.",
+      "Contributed to database design, testing, and deployment.",
+    ],
+    tech: ["Laravel", "PHP", "MySQL", "JavaScript", "HTML", "CSS"],
   },
 ];
 
 export const projects = [
   {
-    title: "Fake news detection with Azure ML",
-    year: "2025 - 2026",
-    tags: ["NLP", "Azure ML", "React"],
+    title: "AtlasLegalAI",
+    year: "2026",
+    tags: ["LLM fine-tuning", "RAG", "Legal AI"],
     summary:
-      "Built an end-to-end NLP system that fine-tunes a transformer model and serves real-time predictions through an Azure-hosted inference workflow.",
-    tech: [
-      "Python",
-      "PyTorch",
-      "Transformers",
-      "Azure ML",
-      "MLflow",
-      "React",
-      "Vite",
-      "Tailwind",
-    ],
-    accent: "blue",
-    cover: "/covers/fake-news-azure.svg",
-    github: "https://github.com/brahim-chahba/Fake-news-detection-azure",
+      "A multilingual French and Arabic Moroccan legal assistant grounded in legal sources and adapted to Moroccan terminology.",
+    tech: ["Python", "PyTorch", "Qwen2.5-3B", "LoRA/QLoRA", "Unsloth", "Hugging Face", "FAISS"],
+    cover: null,
+    github: "https://github.com/brahim-chahba/moroccan-legal-chatbot",
+    liveUrl: null,
     repositoryStatus: "Public repository",
   },
   {
-    title: "Medical consultation platform",
-    year: "2024 - 2025",
-    tags: ["Laravel", "Full-stack", "Healthcare"],
+    title: "Fake News Detection",
+    year: "2025 — 2026",
+    tags: ["NLP", "Azure ML", "MLOps"],
     summary:
-      "Delivered a secure clinic platform for appointments, patient records, and role-based workflows with operational reporting features.",
-    tech: ["Laravel", "MySQL", "JavaScript", "Bootstrap", "DomPDF"],
-    accent: "green",
-    cover: "/covers/medical-consultation.svg",
-    github: null,
-    repositoryStatus: "Repository available on request",
+      "Fine-tuned DistilBERT on the LIAR dataset, reaching 63.8% validation accuracy and 0.631 weighted F1 before deployment to an Azure ML managed endpoint.",
+    tech: ["Python", "PyTorch", "DistilBERT", "Hugging Face", "Azure ML", "MLflow"],
+    cover: "/covers/fake-news-azure.svg",
+    github: "https://github.com/brahim-chahba/Fake-news-detection-azure",
+    liveUrl: "https://tbpress.vercel.app/",
+    repositoryStatus: "Public repository",
   },
   {
-    title: "PFE matcher",
-    year: "2025",
-    tags: ["Spring MVC", "Java", "Backend"],
+    title: "Smart HIRE",
+    year: "Hackathon",
+    tags: ["Multi-agent AI", "Recruitment", "Matching"],
     summary:
-      "Implemented a constraint-aware matching engine that assigns final-year students to projects using preference and capacity rules.",
-    tech: ["Spring MVC", "Java", "MySQL", "Hibernate", "Maven"],
-    accent: "amber",
-    cover: "/covers/pfe-matcher.svg",
+      "A multi-agent recruitment system with a Matcher Agent, composite candidate-job scores, Groq-powered LLM workflows, and persistent matching results.",
+    tech: ["Python", "Groq API", "PostgreSQL", "Agentic AI"],
+    cover: null,
     github: null,
-    repositoryStatus: "Repository available on request",
+    liveUrl: null,
+    repositoryStatus: "Hackathon project",
+  },
+  {
+    title: "Job Intelligence Platform",
+    year: "2026",
+    tags: ["Data engineering", "Analytics API", "ETL"],
+    summary:
+      "An automated pipeline that collects, cleans, and deduplicates job listings from Morocco and France and exposes search, market, salary, and monitoring APIs.",
+    tech: ["Python", "Apache Airflow", "PostgreSQL", "MinIO", "FastAPI", "Docker", "SQL"],
+    cover: null,
+    github: "https://github.com/brahim-chahba/Job-recommendation-pipeline",
+    liveUrl: null,
+    repositoryStatus: "Public repository",
+  },
+  {
+    title: "Azure ML Clustering",
+    year: "2025",
+    tags: ["Unsupervised learning", "Cloud ML", "Segmentation"],
+    summary:
+      "A customer-segmentation workflow built in Azure ML Designer, covering preprocessing, K-Means training, evaluation, and cloud deployment.",
+    tech: ["Azure ML Designer", "K-Means", "Data preprocessing", "Model evaluation"],
+    cover: null,
+    github: "https://github.com/brahim-chahba/azure-ml-clustering-model",
+    liveUrl: null,
+    repositoryStatus: "Public repository",
+  },
+  {
+    title: "Backend from Scratch",
+    year: "2026",
+    tags: ["Systems", "Networking", "Backend"],
+    summary:
+      "A compact Python backend experiment that implements a TCP server directly to explore sockets, request handling, and the foundations behind web frameworks.",
+    tech: ["Python", "TCP sockets", "HTTP fundamentals", "Server architecture"],
+    cover: null,
+    github: "https://github.com/brahim-chahba/Backend-from-Scratch",
+    liveUrl: null,
+    repositoryStatus: "Public repository",
+  },
+  {
+    title: "Spring MVC Product Manager",
+    year: "2026",
+    tags: ["Java", "Web application", "MVC"],
+    summary:
+      "A layered product-management application with Spring MVC controllers, service and DAO layers, JSP views, and database-backed CRUD workflows.",
+    tech: ["Java", "Spring MVC", "JSP", "JPA/Hibernate", "Maven"],
+    cover: null,
+    github: "https://github.com/brahim-chahba/TP6-Spring-MVC",
+    liveUrl: null,
+    repositoryStatus: "Public repository",
   },
 ];
 
@@ -136,46 +168,50 @@ export const testimonials = [];
 
 export const skills = [
   {
-    label: "Backend and software engineering",
-    items: ["Java", "Spring Boot", "Spring MVC", "Laravel", "REST APIs", "Hibernate", "Maven"],
+    label: "Machine learning & deep learning",
+    items: ["Python", "PyTorch", "Scikit-learn", "Hugging Face", "Sentence Transformers", "LoRA/QLoRA", "Pandas", "NumPy"],
   },
   {
-    label: "Frontend",
-    items: ["React", "JavaScript", "HTML/CSS", "Vite", "Tailwind CSS", "Bootstrap"],
+    label: "LLMs & NLP",
+    items: ["RAG", "LangChain", "FAISS", "spaCy", "Qwen2.5", "DistilBERT", "Semantic search", "Embeddings", "Prompt engineering"],
   },
   {
-    label: "AI and data",
-    items: ["Python", "PyTorch", "Transformers", "TensorFlow", "Scikit-learn", "pandas", "NLP"],
+    label: "MLOps & cloud",
+    items: ["Azure ML", "MLflow", "AWS EC2/S3", "Docker", "CI/CD", "Git", "Linux"],
   },
   {
-    label: "Cloud and DevOps",
-    items: ["Azure ML", "AWS", "Docker", "Git/GitHub", "MLflow", "CI/CD", "Model deployment"],
+    label: "Backend & databases",
+    items: ["FastAPI", "Flask", "PostgreSQL", "pgvector", "MySQL", "REST APIs", "Java", "JavaScript/TypeScript"],
+  },
+  {
+    label: "Data engineering & analytics",
+    items: ["Apache Airflow", "ETL pipelines", "MinIO", "SQL", "Power BI"],
   },
 ];
 
 export const certifications = [
   {
-    title: "Advanced learning algorithms",
-    issuer: "DeepLearning.AI / Coursera",
-    year: "2025",
-    credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
+    title: "Building with the Claude API",
+    issuer: "Anthropic Academy",
+    year: "Completed",
+    credentialUrl: null,
   },
   {
-    title: "Supervised machine learning: regression and classification",
-    issuer: "Stanford Online / Coursera",
-    year: "2025",
-    credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
+    title: "Build High-Performance Multi-Agent Systems",
+    issuer: "Google Skills",
+    year: "In progress",
+    credentialUrl: null,
   },
   {
-    title: "Fraud detection on financial transactions with ML",
+    title: "Supervised Machine Learning: Regression and Classification",
+    issuer: "Stanford Online / DeepLearning.AI",
+    year: "Oct 2025",
+    credentialUrl: null,
+  },
+  {
+    title: "Fraud Detection with Machine Learning",
     issuer: "Google Cloud",
-    year: "2025",
-    credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
-  },
-  {
-    title: "Develop clustering models with Azure ML Designer",
-    issuer: "Microsoft Azure",
-    year: "2025",
-    credentialUrl: "https://www.linkedin.com/in/brahimchahba/",
+    year: "Oct 2025",
+    credentialUrl: null,
   },
 ];
