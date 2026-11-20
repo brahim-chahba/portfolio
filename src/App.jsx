@@ -5,6 +5,7 @@ import {
   education,
   experience,
   navItems,
+  projects,
   site,
   skills,
   testimonials,
@@ -26,6 +27,8 @@ function App() {
         <main id="main-content">
           <HeroSection />
           <ExperienceSection />
+          <EducationSection />
+          <ProjectsSection />
           <StackSection />
           <CertificationsSection />
           <AboutSection />
@@ -173,37 +176,80 @@ function HeroSection() {
 function ExperienceSection() {
   return (
     <Section id="experience" number="01" label="Experience" title="Learning by building for real constraints.">
-      <div className="experience-layout">
-        <div className="timeline">
-          {experience.map((item) => (
-            <Reveal key={`${item.company}-${item.role}`}>
-              <article className="timeline-card">
-                <div className="timeline-date">{item.period}</div>
-                <div>
-                  <p className="item-label">Professional experience</p>
-                  <h3>{item.role}</h3>
-                  <p className="company">{item.company}</p>
-                  <p className="item-summary">{item.summary}</p>
-                  <ul className="detail-list">
-                    {item.bullets.map((point) => <li key={point}>{point}</li>)}
-                  </ul>
-                </div>
-              </article>
-            </Reveal>
-          ))}
-        </div>
+      <div className="timeline">
+        {experience.map((item) => (
+          <Reveal key={`${item.company}-${item.role}`}>
+            <article className="timeline-card">
+              <div className="timeline-date">{item.period}</div>
+              <div>
+                <p className="item-label">Professional experience</p>
+                <h3>{item.role}</h3>
+                <p className="company">{item.company}</p>
+                <p className="item-summary">{item.summary}</p>
+                <ul className="detail-list">
+                  {item.bullets.map((point) => <li key={point}>{point}</li>)}
+                </ul>
+              </div>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
 
-        <aside className="education-card">
-          <p className="item-label">Education</p>
-          {education.map((item) => (
-            <div key={item.school}>
-              <span>{item.period}</span>
-              <h3>{item.degree}</h3>
-              <p className="company">{item.school}</p>
-              <p>{item.details}</p>
-            </div>
-          ))}
-        </aside>
+function EducationSection() {
+  return (
+    <Section id="education" number="02" label="Education" title="Engineering foundations shaped by applied work.">
+      <div className="education-list">
+        {education.map((item) => (
+          <Reveal key={item.school}>
+            <article className="education-row">
+              <span className="education-period">{item.period}</span>
+              <div>
+                <p className="item-label">State engineering programme</p>
+                <h3>{item.degree}</h3>
+                <p className="company">{item.school}</p>
+                <p className="item-summary">{item.details}</p>
+              </div>
+              <span className="education-index" aria-hidden="true">EDU / 01</span>
+            </article>
+          </Reveal>
+        ))}
+      </div>
+    </Section>
+  );
+}
+
+function ProjectsSection() {
+  return (
+    <Section id="projects" number="03" label="Projects" title="Selected systems, built from problem to product.">
+      <div className="project-grid">
+        {projects.map((project, index) => (
+          <Reveal key={project.title} delay={index * 0.05}>
+            <article className="project-card">
+              <div className="project-cover">
+                <img src={project.cover} alt="" width="640" height="360" />
+                <span>{String(index + 1).padStart(2, "0")} / {project.year}</span>
+              </div>
+              <div className="project-body">
+                <div className="project-tags">
+                  {project.tags.map((tag) => <span key={tag}>{tag}</span>)}
+                </div>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+                <ul className="project-tech" aria-label={`${project.title} technologies`}>
+                  {project.tech.map((item) => <li key={item}>{item}</li>)}
+                </ul>
+                {project.github ? (
+                  <a className="project-link" href={project.github} target="_blank" rel="noopener noreferrer">View repository ↗</a>
+                ) : (
+                  <span className="project-status">{project.repositoryStatus}</span>
+                )}
+              </div>
+            </article>
+          </Reveal>
+        ))}
       </div>
     </Section>
   );
@@ -211,7 +257,7 @@ function ExperienceSection() {
 
 function StackSection() {
   return (
-    <Section id="stack" number="02" label="Core technologies" title="A focused stack for dependable delivery.">
+    <Section id="stack" number="04" label="Core technologies" title="A focused stack for dependable delivery.">
       <p className="section-intro">Names stay more legible than mixed brand logos and better fit the editorial system. Each technology gets one consistent pixel marker.</p>
       <div className="stack-grid">
         {skills.map((group, index) => (
@@ -232,7 +278,7 @@ function StackSection() {
 
 function CertificationsSection() {
   return (
-    <Section id="certifications" number="03" label="Certifications" title="Structured learning, applied in practice.">
+    <Section id="certifications" number="05" label="Certifications" title="Structured learning, applied in practice.">
       <div className="cert-list">
         {certifications.map((cert, index) => (
           <Reveal key={cert.title} delay={index * 0.035}>
@@ -254,7 +300,7 @@ function CertificationsSection() {
 
 function AboutSection() {
   return (
-    <Section id="about" number="04" label="About" title={about.heading}>
+    <Section id="about" number="06" label="About" title={about.heading}>
       <div className="about-layout">
         <div className="about-copy">
           {about.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
@@ -280,7 +326,7 @@ function TestimonialsSection() {
   const hasTestimonials = testimonials.length > 0;
 
   return (
-    <Section id="testimonials" number="05" label="Testimonials" title="Good work is built on trust.">
+    <Section id="testimonials" number="07" label="Testimonials" title="Good work is built on trust.">
       {hasTestimonials ? (
         <div className="testimonial-grid">
           {testimonials.map((item, index) => (
@@ -307,7 +353,7 @@ function TestimonialsSection() {
 function ContactSection() {
   return (
     <section className="contact-section section-shell" id="contact" aria-labelledby="contact-heading">
-      <p className="eyebrow eyebrow-light"><span /> 06 / Contact</p>
+      <p className="eyebrow eyebrow-light"><span /> 08 / Contact</p>
       <div className="contact-grid">
         <div>
           <h2 id="contact-heading">Have a problem worth solving?</h2>
