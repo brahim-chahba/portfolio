@@ -1,25 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap");
 
 :root {
   color-scheme: light;
 
-  --color-canvas: #f3f4f0;
-  --color-canvas-soft: #ecefe9;
-  --color-surface: #ffffff;
-  --color-ink: #192028;
-  --color-ink-soft: #36414c;
-  --color-ink-muted: #67737d;
-  --color-border: #dde3e0;
-  --color-border-strong: #c9d2ce;
+  /* Editorial paper, printer's ink, and one precise digital blue. */
+  --color-canvas: #f3f0e8;
+  --color-canvas-soft: #ebe6da;
+  --color-surface: #fffdf7;
+  --color-ink: #171914;
+  --color-ink-soft: #3d4038;
+  --color-ink-muted: #73766c;
+  --color-border: #d4d0c5;
+  --color-border-strong: #aaa89f;
 
-  --color-accent: #2f5b69;
-  --color-accent-soft: #e2ebed;
-  --color-project-a: #d8e6ec;
-  --color-project-b: #dfe8df;
-  --color-project-c: #e8e0d3;
+  --color-accent: #3155d9;
+  --color-accent-soft: #dfe5ff;
+  --color-project-a: #dce4ff;
+  --color-project-b: #dce9dc;
+  --color-project-c: #efe0c8;
 
   --font-display: "Instrument Serif", "Times New Roman", serif;
-  --font-body: "Plus Jakarta Sans", "Outfit", "Helvetica Neue", sans-serif;
+  --font-body: "Plus Jakarta Sans", "Helvetica Neue", sans-serif;
   --font-mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 
   --space-1: 0.25rem;
@@ -37,26 +38,26 @@
 
   --text-xs: 0.72rem;
   --text-md: 1rem;
+  --pixel: 8px;
+  --container: min(1184px, calc(100% - 2rem));
+  --section-gap: clamp(5rem, 8.8vw, 8.8rem);
 
-  --container: min(1160px, calc(100% - 2rem));
-  --section-gap: clamp(5rem, 8.8vw, 8.6rem);
-
-  --radius-sm: 0.36rem;
-  --radius-lg: 0.72rem;
-  --radius-xl: 1.1rem;
+  --radius-sm: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
 
   --dur-0: 100ms;
-  --dur-1: 160ms;
-  --dur-2: 240ms;
-  --dur-3: 420ms;
-  --dur-4: 620ms;
+  --dur-1: 150ms;
+  --dur-2: 230ms;
+  --dur-3: 400ms;
+  --dur-4: 640ms;
   --dur-5: 920ms;
 
-  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-smooth: cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-snappy: cubic-bezier(0.2, 0.85, 0.22, 1);
+  --ease-snappy: steps(2, end);
   --ease-glide: cubic-bezier(0.3, 0.12, 0.12, 1);
-  --focus-ring: 0 0 0 3px rgba(63, 104, 116, 0.24);
+  --focus-ring: 0 0 0 3px rgba(49, 85, 217, 0.28);
   --scroll-progress: 0;
 }

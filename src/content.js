@@ -19,6 +19,7 @@ export const navItems = [
   { label: "Stack", href: "#stack" },
   { label: "Certs", href: "#certifications" },
   { label: "About", href: "#about" },
+  { label: "Notes", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -128,6 +129,10 @@ export const projects = [
     repositoryStatus: "Repository available on request",
   },
 ];
+
+// Add only approved, attributable quotes here. The UI intentionally renders a
+// verification state while this list is empty so no endorsement is fabricated.
+export const testimonials = [];
 
 export const skills = [
   {

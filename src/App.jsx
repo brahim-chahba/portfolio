@@ -1,5 +1,4 @@
 import React, { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
-import LightRays from "./components/LightRays";
 import {
   about,
   capabilities,
@@ -10,6 +9,7 @@ import {
   projects,
   site,
   skills,
+  testimonials,
 } from "./content";
 
 const REVEAL_DURATION = 0.54;
@@ -87,6 +87,7 @@ function App() {
           <StackSection />
           <CertificationsSection />
           <AboutSection />
+          <TestimonialsSection />
           <ContactSection />
         </main>
 
@@ -389,25 +390,13 @@ function HeroSection() {
 
       <Reveal delay={0.14} duration={0.66} distance={16}>
         <div className="hero-visual">
-          <div className="hero-ray-shell" aria-hidden="true">
-            <div style={{ width: "1080px", height: "1080px", position: "relative" }}>
-              <LightRays
-                raysOrigin="top-center"
-                raysColor="#ffdf00"
-                raysSpeed={1}
-                lightSpread={1}
-                rayLength={2.7}
-                pulsating={false}
-                fadeDistance={1}
-                saturation={1}
-                followMouse
-                mouseInfluence={0.25}
-                noiseAmount={0}
-                distortion={0}
-              />
-            </div>
+          <div className="mosaic-frame" aria-hidden="true">
+            {Array.from({ length: 24 }, (_, index) => (
+              <span key={index} className={`mosaic-pixel pixel-${(index % 7) + 1}`} />
+            ))}
           </div>
           <div className="portrait-stage">
+            <span className="portrait-label">FIG. 01 / BUILDER</span>
             <img
               src="/me-white-removebg-preview.png"
               alt={`Portrait of ${site.name}`}
@@ -415,6 +404,7 @@ function HeroSection() {
               height="520"
               loading="eager"
             />
+            <span className="portrait-coordinate">30.4278 N / 9.5981 W</span>
           </div>
         </div>
       </Reveal>
@@ -709,6 +699,49 @@ function CertificationsSection() {
   );
 }
 
+function TestimonialsSection() {
+  const hasApprovedQuotes = testimonials.length > 0;
+
+  return (
+    <section className="section testimonials" id="testimonials" aria-labelledby="testimonials-heading">
+      <Reveal>
+        <SectionHeader
+          index="07"
+          id="testimonials-heading"
+          kicker="Collaborator notes"
+          title="Trust is best documented by the people who shared the work."
+          body="Only approved, attributable feedback will be published here."
+        />
+      </Reveal>
+
+      <div className="testimonial-grid">
+        {hasApprovedQuotes
+          ? testimonials.map((testimonial, index) => (
+              <Reveal key={`${testimonial.name}-${testimonial.quote}`} delay={0.04 + index * 0.05}>
+                <figure className="testimonial-card">
+                  <span className="testimonial-index">{String(index + 1).padStart(2, "0")}</span>
+                  <blockquote>{testimonial.quote}</blockquote>
+                  <figcaption>
+                    <strong>{testimonial.name}</strong>
+                    <span>{testimonial.role}</span>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))
+          : Array.from({ length: 3 }, (_, index) => (
+              <Reveal key={index} delay={0.04 + index * 0.05}>
+                <article className="testimonial-card testimonial-pending">
+                  <span className="testimonial-index">{String(index + 1).padStart(2, "0")}</span>
+                  <p>Approved quote pending</p>
+                  <span>Content verification queue</span>
+                </article>
+              </Reveal>
+            ))}
+      </div>
+    </section>
+  );
+}
+
 function ContactSection() {
   return (
     <section className="section" id="contact" aria-labelledby="contact-heading">
@@ -717,7 +750,7 @@ function ContactSection() {
           <div className="contact-grid">
             <div className="contact-main">
               <p className="kicker">
-                <span className="section-index">07</span> Contact
+                <span className="section-index">08</span> Contact
               </p>
               <h2 id="contact-heading">Open to internship and freelance collaboration.</h2>
             </div>
