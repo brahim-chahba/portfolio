@@ -83,7 +83,7 @@ export const projects = [
     summary:
       "A multilingual French and Arabic Moroccan legal assistant grounded in legal sources and adapted to Moroccan terminology.",
     tech: ["Python", "PyTorch", "Qwen2.5-3B", "LoRA/QLoRA", "Unsloth", "Hugging Face", "FAISS"],
-    cover: null,
+    cover: "/covers/atlas-legal-ai.svg",
     github: "https://github.com/brahim-chahba/moroccan-legal-chatbot",
     liveUrl: null,
     repositoryStatus: "Public repository",
@@ -107,7 +107,7 @@ export const projects = [
     summary:
       "A multi-agent recruitment system with a Matcher Agent, composite candidate-job scores, Groq-powered LLM workflows, and persistent matching results.",
     tech: ["Python", "Groq API", "PostgreSQL", "Agentic AI"],
-    cover: null,
+    cover: "/covers/smart-hire.svg",
     github: null,
     liveUrl: null,
     repositoryStatus: "Hackathon project",
@@ -119,7 +119,7 @@ export const projects = [
     summary:
       "An automated pipeline that collects, cleans, and deduplicates job listings from Morocco and France and exposes search, market, salary, and monitoring APIs.",
     tech: ["Python", "Apache Airflow", "PostgreSQL", "MinIO", "FastAPI", "Docker", "SQL"],
-    cover: null,
+    cover: "/covers/job-intelligence.svg",
     github: "https://github.com/brahim-chahba/Job-recommendation-pipeline",
     liveUrl: null,
     repositoryStatus: "Public repository",
@@ -131,7 +131,7 @@ export const projects = [
     summary:
       "A customer-segmentation workflow built in Azure ML Designer, covering preprocessing, K-Means training, evaluation, and cloud deployment.",
     tech: ["Azure ML Designer", "K-Means", "Data preprocessing", "Model evaluation"],
-    cover: null,
+    cover: "/covers/azure-clustering.svg",
     github: "https://github.com/brahim-chahba/azure-ml-clustering-model",
     liveUrl: null,
     repositoryStatus: "Public repository",
@@ -143,7 +143,7 @@ export const projects = [
     summary:
       "A compact Python backend experiment that implements a TCP server directly to explore sockets, request handling, and the foundations behind web frameworks.",
     tech: ["Python", "TCP sockets", "HTTP fundamentals", "Server architecture"],
-    cover: null,
+    cover: "/covers/backend-scratch.svg",
     github: "https://github.com/brahim-chahba/Backend-from-Scratch",
     liveUrl: null,
     repositoryStatus: "Public repository",
@@ -155,7 +155,7 @@ export const projects = [
     summary:
       "A layered product-management application with Spring MVC controllers, service and DAO layers, JSP views, and database-backed CRUD workflows.",
     tech: ["Java", "Spring MVC", "JSP", "JPA/Hibernate", "Maven"],
-    cover: null,
+    cover: "/covers/spring-mvc.svg",
     github: "https://github.com/brahim-chahba/TP6-Spring-MVC",
     liveUrl: null,
     repositoryStatus: "Public repository",
