@@ -1,226 +1,217 @@
-# Design System: Brahim Chahba Engineering Portfolio
+# Brahim Chahba Portfolio Design System
 
-## 0. Brand positioning
+## 1. Product Intent
 
-**Role:** Engineering student specialized in software engineering, AI/data, and cloud-based intelligent systems.
+### Core Goal
+Build a minimalist, high-credibility engineering portfolio that feels premium, calm, and intentional.
 
-**Headline:** Engineering Student | AI & Full-Stack Developer | Building intelligent web, data, and cloud solutions
+### Positioning
+- Profile: Fourth-year engineering student (ENSAH), focused on AI, backend systems, and cloud delivery.
+- Audience: Recruiters, internship hiring managers, freelance clients, technical mentors.
+- Promise: Practical execution, real projects, clear technical thinking, strong learning velocity.
 
-**Value proposition:** I build practical AI, data, and full-stack solutions — from intelligent chatbots and ML pipelines to Java web applications and cloud-deployed systems.
+### Communication Style
+- Confident, direct, and concrete.
+- No overclaiming seniority.
+- No generic startup buzzwords.
 
-**Target audience:** Recruiters, hiring managers for internships/junior roles, freelance clients, tech leads evaluating contractor availability.
+## 2. Visual Direction
 
-**Tone:** Confident but realistic. Credible engineer who has shipped real projects, not an overclaimed generalist. Clear about learning capacity and hands-on delivery.
+### Design Language
+- Editorial minimalism with engineering structure.
+- Flat surfaces, strict lines, restrained accent usage.
+- High typographic contrast, low visual noise.
 
----
+### Visual Rules
+- Backgrounds stay neutral and quiet.
+- Borders are structural, not decorative.
+- Motion is subtle and purposeful.
+- Avoid loud gradients, heavy shadows, neon effects.
 
-## 1. Visual theme and atmosphere
-A restrained editorial engineering interface with warm-neutral surfaces, strict structural lines, and subtle kinetic depth.
+## 3. Color Tokens
 
-- Density: 4 (airy but informative)
-- Variance: 8 (asymmetric section composition with strict mobile collapse)
-- Motion: 6 (fluid and calm, never noisy)
+- Canvas: `#F3F4F0`
+- Canvas Soft: `#ECEFE9`
+- Surface: `#FFFFFF`
+- Ink: `#192028`
+- Ink Soft: `#36414C`
+- Ink Muted: `#67737D`
+- Border: `#DDE3E0`
+- Border Strong: `#C9D2CE`
+- Accent: `#2F5B69`
+- Accent Soft: `#E2EBED`
 
-The site should feel technical, credible, and intentional rather than decorative.
+Project tints:
+- Project A: `#D8E6EC`
+- Project B: `#DFE8DF`
+- Project C: `#E8E0D3`
 
-## 2. Color palette and roles
-- Canvas (`#FAFAF7`): global page background
-- Canvas Soft (`#F4F4EF`): low-emphasis surface support
-- Surface (`#FFFFFF`): primary cards and containers
-- Ink (`#1F252C`): primary text
-- Ink Soft (`#3D4852`): body text and secondary copy
-- Ink Muted (`#69727A`): metadata, labels, tertiary text
-- Border (`#E3E6E4`): standard 1px structural line
-- Border Strong (`#C7CECC`): stronger separators
-- Accent (`#3F6874`): only accent color for focus and interaction
-- Accent Soft (`#E8F0F2`): low-contrast accent backing
+Usage constraints:
+- Accent appears only in focus/interaction states and controlled highlights.
+- No multi-color palettes.
+- No hard black text (`#000000`).
 
-Project tint system:
-- Project A (`#DEE9ED`)
-- Project B (`#E8EDE2`)
-- Project C (`#EBE8DE`)
+## 4. Typography System
 
-## 3. Typography rules
-- Display: `Instrument Serif` for hero and section headings
+- Display: `Instrument Serif`
 - Body/UI: `Plus Jakarta Sans`
-- Mono/Metadata: `JetBrains Mono`
+- Mono: `JetBrains Mono`
 
 Rules:
-- Headings use tight tracking and short line-height
-- Paragraphs remain readable at 55ch-65ch
-- Metadata and small labels use mono + uppercase tracking
-- Never use Inter, Roboto, Open Sans, Arial, or pure system-default styling
+- Hero and section titles use display font at medium weight with tight spacing.
+- Body copy uses comfortable rhythm and max width (`55ch-65ch`).
+- Labels and metadata use mono, uppercase, and restrained tracking.
+- Never use Inter/Roboto/Open Sans/system-default styling as primary look.
 
-## 4. Component styling
-Buttons:
-- Primary: ink fill with white text
-- Secondary: accent-soft with accent border
-- Ghost: neutral outline
-- Press feedback: `scale(0.97)`
+## 5. Layout Architecture
 
-Cards and panels:
-- 1px border
-- crisp rounded corners (6px-12px)
-- ultra-diffuse shadow only
-- hover lift no more than 2px
+### Page Flow
+1. Hero
+2. Work (Projects)
+3. Services (Capabilities)
+4. Experience
+5. Technical Stack
+6. Certifications
+7. About
+8. Contact
 
-Tags and chips:
-- rounded chip form
-- subdued neutral backgrounds
-- mono micro-label rhythm
+### Spatial System
+- Max content container: `1160px-1220px`.
+- Section spacing: `clamp(5rem, 8.8vw, 8.6rem)`.
+- Consistent vertical rhythm across every section.
+- Keep asymmetry on desktop and strict single-column collapse on mobile.
 
-Navigation:
-- sticky floating bar
-- subtle blur on scroll
-- active route with restrained underline accent
+### Responsiveness
+- Breakpoints: `1140`, `1024`, `760`, `620`, `390`.
+- No horizontal overflow.
+- Touch targets remain comfortable.
 
-## 5. Layout principles
-- Max layout width: `1200px`
-- Section rhythm: `clamp(5rem, 10vw, 9rem)`
-- Hero: asymmetric split (content + portrait)
-- Capabilities: asymmetrical 12-column composition (5/3/4)
-- Projects: asymmetrical 12-column composition (7/5/6 patterns)
-- Engineering: asymmetrical 7/5 split
+## 6. Component Standards
 
-Mobile rules:
-- all multi-column structures collapse to single column below `1140px`
-- no horizontal overflow
-- touch targets remain >= 44px
+### Navigation
+- Sticky top bar with subtle scroll state.
+- Minimal link styling with understated active indicator.
+- Mobile menu remains clean and readable.
 
-## 6. Motion and interaction
-Default motion:
-- Reveal from `opacity: 0`, `translateY(12px)`
-- Duration ~560ms
-- Easing: `cubic-bezier(0.23, 1, 0.32, 1)`
+### Buttons
+- Primary: ink fill with white text.
+- Secondary links: mono, uppercase, low-contrast.
+- Press feedback: micro-scale/translation only.
 
-Interaction motion:
-- Hover translation <= 2px
-- Press feedback on all pressable controls
-- Animated details are transform/opacity only
+### Cards and Rows
+- Flat surfaces with crisp 1px borders.
+- Rounded corners used sparingly.
+- Hover shifts must stay under 2px.
 
-Ambient motion:
-- fixed background grid + drifting blurred orbs
-- one marquee strip for capability chips
-- reduced-motion mode disables non-essential loops
+### Lists and Metadata
+- Mono uppercase labels for years/tags/status.
+- Tight but readable spacing.
+- No noisy icon clutter.
 
-## 7. Content and credibility rules
+## 7. Motion Principles
 
-### Hero section rules
-- Lead with strongest value prop: practical delivery, real projects, technical credibility
-- Include short headline (≤12 words)
-- Include role clarity (what I do, not generic titles)
-- Include value statement (what problems I solve, not ego)
-- CTA buttons: View Projects, Contact Me, Download CV
-- Optional: abstract visual (code snippet, grid, or project teaser—not portrait photo unless exceptional)
-- Communicate immediately: "This student ships real code, not theory."
+- Reveal animation: opacity + translateY only.
+- Duration target: `~540ms`.
+- Easing target: smooth ease-out curve.
+- Respect `prefers-reduced-motion`.
+- No perpetual decorative loops unless they communicate value.
 
-### About section rules
-- State: 4th-year engineering student at ENSAH
-- Explain: Work across software engineering, AI/data, cloud, and cybersecurity
-- Clarify: Currently open to internship and freelance opportunities
-- weak project descriptions
-- overclaimed skill levels
-- generic "I'm passionate about tech" copy
-- resume-dump format (just list, no storytelling)
+## 8. LightRays Integration Strategy
 
-## 9. Ongoing quality checklist
+### Purpose
+Introduce one creative hero animation layer that feels premium without breaking minimalism.
 
-**First impression (0-2 seconds):**
-- Is the headline instantly clear? (Role + value, not ego)
-- Is there a strong CTA visible?
-- Does the visual feel professional and intentional, not generic?
+### Placement
+- Hero visual area, behind portrait.
+- Localized surface, not full-page takeover.
 
-**Navigation and flow (2-10 seconds):**
-- Can I find projects easily?
-- Is the navigation clear and sticky?
-- Does each section have a clear purpose?
-- Is there no cognitive load (not too much text at once)?
+### Behavior
+- Interactive ray influence with low visual aggression.
+- Blend mode and opacity tuned to preserve text legibility.
+- Must degrade cleanly under reduced motion.
 
-**Project credibility (10-30 seconds reading):**
-- Does each project explain what problem it solves?
-- Can I see real GitHub links or demo links?
-- Do the technologies sound realistic for an engineering student?
-- Does it feel like the student actually shipped these, not just studied them?
+### Requested Source Command and Usage
+```bash
+npx shadcn@latest add @react-bits/LightRays-JS-CSS
+```
 
-**Technical depth (30-60 seconds deeper reading):**
-- Are the skills organized logically?
-- Do the technologies match the projects (no random skills)?
-- Are certifications relevant and credible?
-- Do I understand what the student is strongest at?
+```jsx
+<div style={{ width: "1080px", height: "1080px", position: "relative" }}>
+  <LightRays
+    raysOrigin="top-center"
+    raysColor="#ffdf00"
+    raysSpeed={1}
+    lightSpread={1}
+    rayLength={2.7}
+    pulsating={false}
+    fadeDistance={1}
+    saturation={1}
+    followMouse
+    mouseInfluence={0.25}
+    noiseAmount={0}
+    distortion={0}
+  />
+</div>
+```
 
-**Recruiter confidence (full visit):**
-- Would I consider this student for an internship? (Honest yes/no)
-- Could I estimate their learning capacity?
-- Are they open to the right opportunities?
-- Is there a clear way to contact them?
-- Does the code/layout suggest attention to detail?
+## 9. Content Strategy
 
-**Technical hiring confidence:**
-- Are the projects real, or do they sound made up?
-- Is the positioning realistic (not overclaimed)?
-- Would I trust them to own a feature?
-- Do I see evidence of learning, not just completionaddress?
-**Solution (Implementation):** What specifically did you build? What's the user-facing result?
-**Tech (Architecture):** What technologies, libraries, patterns, and delivery mechanisms?
-**Impact (Credibility):** What does this demonstrate about your skill level and work ethic?
+### Hero
+- Clear role line.
+- Practical value proposition.
+- Immediate CTA to work.
+- Trust signals (projects/focus/availability).
 
-**Example format:**
-> Built an end-to-end fake news detection system using transformer-based NLP, fine-tuned on news datasets, deployed via Azure ML managed endpoints, and exposed through a React interface for real-time article scoring.
+### Projects
+Each project must communicate:
+- Problem context.
+- Implementation summary.
+- Core stack.
+- Delivery proof (repo/demo/status).
 
-For each project, include:
-- Clear title (not generic)
-- Year or timeline
-- Technology tags (backend, frontend, data, DevOps)
-- 1-2 sentence summary
-- Problem/context
-- Outcome/delivery proof
-- Technology stack
-- GitHub/demo link
-- Repository status (public, on request, etc.)
+### Services
+Three explicit tracks:
+1. AI feature delivery.
+2. Backend/API systems.
+3. Cloud/data pipelines.
 
-### Skills section rules
-- Organize by technical domain, not random list
-- Categories: Backend & Software Engineering, Frontend, AI/Data, Cloud/DevOps, Databases, Cybersecurity
-- Be honest about skill level (do not present all as advanced if you're still learning)
-- Prefer concrete tech names over vague keywords
-- No "soft skills" padding (communication, teamwork assumed)
-- No emoji, no redundant tags
+### Experience, Stack, Certifications
+- Split into distinct sections.
+- Avoid dumping all proof into a single block.
+- Keep scanability high and cognitive load low.
 
-### Capabilities/Services section rules
-Position "what I can help with" as:
-1. AI feature delivery (model to inference to product)
-2. Backend and API systems (architecture, role boundaries, maintainability)
-3. Cloud and data pipelines (orchestration, deployment, tracking)
+### About
+- Short profile narrative.
+- Concrete facts (location, education, focus, availability).
 
-Keep descriptions concrete, outcome-focused, not flowery.
+### Contact
+- Low-friction routes: email, phone, LinkedIn, resume.
+- Clear collaboration intent.
 
-### Avoid at all costs
-- Senior-level overclaims ("expert", "master", "10x", "world-class")
-- Generic AI-generated tone
-- Fake testimonials or synthetic credibility
-- Placeholder project names
-- Vague mission statements
-- "I'm passionate about..." filler
-- Too many buzzwords
-- Inconsistent technical depth (some projects sound junior, some sound senior)
-- Dead links or missing GitHub repos
-- Typos or grammar errors
-- Excessive color or animation
-- Unclear CTAs
+## 10. Quality Bar Checklist
 
-## 8. Anti-patterns (banned)
-- neon glows and loud gradient text
-- mixed warm/cool gray systems in one page
-- generic 3-column equal feature layouts
-- typography defaults that resemble boilerplate AI output
-- excessive motion or decorative effects without informational purpose
-- dead CTA links
-- emojis in UI copy
+### First 5 seconds
+- Is role/value instantly clear?
+- Is there an obvious primary CTA?
+- Does visual quality feel intentional?
 
-## 9. Ongoing quality checklist
-- Is the first screen instantly clear about role and value?
-- Is section spacing consistent and calm?
-- Are motion timings under control and non-distracting?
-- Is every card and button behavior consistent?
-- Does mobile retain hierarchy and readability?
-- Does the portfolio read as credible and recruiter-friendly?
+### 30-second skim
+- Are projects credible and concrete?
+- Is technical focus obvious?
+- Can visitor quickly find contact paths?
+
+### Full pass
+- Does hierarchy hold across desktop/mobile?
+- Is spacing consistent everywhere?
+- Are animation and hover states coherent?
+- Is copy realistic and non-generic?
+
+## 11. Anti-Patterns (Banned)
+
+- Neon glow aesthetics.
+- Over-saturated gradients.
+- Generic equal-width feature rows everywhere.
+- Over-animated UI that competes with content.
+- Overclaim language ("expert", "world-class", "10x").
+- Dead links or placeholders presented as real proof.
+- Emoji-heavy or gimmicky UI copy.

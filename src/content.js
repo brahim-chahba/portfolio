@@ -15,7 +15,9 @@ export const navItems = [
   { label: "Home", href: "#hero" },
   { label: "Work", href: "#work" },
   { label: "Services", href: "#capabilities" },
-  { label: "Engineering", href: "#engineering" },
+  { label: "Experience", href: "#experience" },
+  { label: "Stack", href: "#stack" },
+  { label: "Certs", href: "#certifications" },
   { label: "About", href: "#about" },
   { label: "Contact", href: "#contact" },
 ];
@@ -23,8 +25,8 @@ export const navItems = [
 export const about = {
   heading: "Fourth-year engineering student focused on practical AI and backend systems.",
   paragraphs: [
-    "At ENSAH, I work on software that combines AI features, backend services, and cloud delivery under real constraints.",
-    "I am currently open to internship and freelance collaborations where I can contribute end-to-end implementation.",
+    "At ENSAH, I build software that combines AI features, backend services, and cloud delivery under real project constraints.",
+    "I am currently open to internship and freelance collaborations where I can contribute architecture, implementation, and delivery end-to-end.",
   ],
   facts: [
     { label: "Base", value: "Agadir, Morocco" },
@@ -85,7 +87,7 @@ export const projects = [
     year: "2025 - 2026",
     tags: ["NLP", "Azure ML", "React"],
     summary:
-      "End-to-end fake news classification with a fine-tuned transformer and real-time inference UI.",
+      "Built an end-to-end NLP system that fine-tunes a transformer model and serves real-time predictions through an Azure-hosted inference workflow.",
     tech: [
       "Python",
       "PyTorch",
@@ -106,7 +108,7 @@ export const projects = [
     year: "2024 - 2025",
     tags: ["Laravel", "Full-stack", "Healthcare"],
     summary:
-      "Secure clinic web application for appointments, patient records, role-based access, and reporting.",
+      "Delivered a secure clinic platform for appointments, patient records, and role-based workflows with operational reporting features.",
     tech: ["Laravel", "MySQL", "JavaScript", "Bootstrap", "DomPDF"],
     accent: "green",
     cover: "/covers/medical-consultation.svg",
@@ -118,7 +120,7 @@ export const projects = [
     year: "2025",
     tags: ["Spring MVC", "Java", "Backend"],
     summary:
-      "Constraint-aware platform that assigns final-year students to projects based on preferences and capacity.",
+      "Implemented a constraint-aware matching engine that assigns final-year students to projects using preference and capacity rules.",
     tech: ["Spring MVC", "Java", "MySQL", "Hibernate", "Maven"],
     accent: "amber",
     cover: "/covers/pfe-matcher.svg",

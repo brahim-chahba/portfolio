@@ -455,6 +455,65 @@ img {
   position: relative;
 }
 
+.hero-ray-shell {
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 1080px;
+  height: 1080px;
+  transform: translate(-50%, -56%) scale(var(--ray-shell-scale, 1));
+  z-index: 1;
+  opacity: 0.28;
+  pointer-events: auto;
+}
+
+.light-rays {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  filter: saturate(var(--lr-saturation));
+  mask-image: radial-gradient(
+    circle at 50% 30%,
+    rgba(0, 0, 0, 1) 0%,
+    rgba(0, 0, 0, 0.92) calc(56% * var(--lr-fade)),
+    rgba(0, 0, 0, 0) 100%
+  );
+}
+
+.light-rays-core {
+  position: absolute;
+  inset: -8%;
+  transform-origin: var(--lr-origin);
+  transition: transform 280ms var(--ease-smooth);
+}
+
+.light-ray {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--ray-width);
+  height: calc(54% * var(--lr-length));
+  transform-origin: 50% 0%;
+  transform: rotate(var(--ray-angle));
+  opacity: var(--ray-opacity);
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--lr-color) calc((58% + (var(--lr-noise) * 12%))), transparent),
+    transparent
+  );
+  filter: blur(calc((2.4px + (var(--lr-distortion) * 1.2px)) * var(--lr-length)));
+  animation: light-rays-drift calc(18s / var(--lr-speed)) linear infinite;
+  animation-delay: var(--ray-delay);
+}
+
+.light-rays-core.is-pulsating .light-ray {
+  animation-name: light-rays-drift, light-rays-pulse;
+  animation-duration: calc(18s / var(--lr-speed)), 4.6s;
+  animation-timing-function: linear, var(--ease-smooth);
+  animation-iteration-count: infinite, infinite;
+}
+
 .hero-visual::after {
   content: none;
 }
@@ -863,6 +922,12 @@ img {
   gap: var(--space-8);
 }
 
+.stack-flow,
+.cert-grid {
+  display: grid;
+  gap: var(--space-4);
+}
+
 .engineering-secondary {
   display: grid;
   gap: var(--space-8);
@@ -1056,6 +1121,31 @@ img {
   letter-spacing: -0.002em;
 }
 
+@keyframes light-rays-drift {
+  0% {
+    opacity: calc(var(--ray-opacity) * 0.62);
+    transform: rotate(calc(var(--ray-angle) - 2.4deg));
+  }
+  50% {
+    opacity: calc(var(--ray-opacity) * 1.08);
+    transform: rotate(var(--ray-angle));
+  }
+  100% {
+    opacity: calc(var(--ray-opacity) * 0.62);
+    transform: rotate(calc(var(--ray-angle) + 2.4deg));
+  }
+}
+
+@keyframes light-rays-pulse {
+  0%,
+  100% {
+    opacity: calc(var(--ray-opacity) * 0.84);
+  }
+  50% {
+    opacity: calc(var(--ray-opacity) * 1.2);
+  }
+}
+
 .footer-links {
   display: inline-flex;
   align-items: center;
@@ -1245,6 +1335,12 @@ img {
     font-size: clamp(2.18rem, 5.2vw, 3.2rem);
     line-height: 0.95;
   }
+
+  .hero-ray-shell {
+    --ray-shell-scale: 0.8;
+    opacity: 0.22;
+    transform: translate(-50%, -55%) scale(var(--ray-shell-scale));
+  }
 }
 
 @media (max-width: 760px) {
@@ -1365,6 +1461,12 @@ img {
   .hero-title {
     font-size: clamp(2.02rem, 8.6vw, 2.76rem);
     line-height: 0.99;
+  }
+
+  .hero-ray-shell {
+    --ray-shell-scale: 0.62;
+    opacity: 0.16;
+    transform: translate(-50%, -53%) scale(var(--ray-shell-scale));
   }
 
   .section-header h2,
@@ -1494,8 +1596,14 @@ img {
 
   .capability-card,
   .project-card,
-  .project-cover-image {
+  .project-cover-image,
+  .light-rays-core,
+  .light-ray {
     transition: none !important;
+  }
+
+  .light-ray {
+    animation: none !important;
   }
 
 }

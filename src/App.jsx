@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
+import LightRays from "./components/LightRays";
 import {
   about,
   capabilities,
@@ -82,7 +83,9 @@ function App() {
           <HeroSection />
           <ProjectsSection />
           <CapabilitiesSection />
-          <EngineeringSection />
+          <ExperienceSection />
+          <StackSection />
+          <CertificationsSection />
           <AboutSection />
           <ContactSection />
         </main>
@@ -386,6 +389,24 @@ function HeroSection() {
 
       <Reveal delay={0.14} duration={0.66} distance={16}>
         <div className="hero-visual">
+          <div className="hero-ray-shell" aria-hidden="true">
+            <div style={{ width: "1080px", height: "1080px", position: "relative" }}>
+              <LightRays
+                raysOrigin="top-center"
+                raysColor="#ffdf00"
+                raysSpeed={1}
+                lightSpread={1}
+                rayLength={2.7}
+                pulsating={false}
+                fadeDistance={1}
+                saturation={1}
+                followMouse
+                mouseInfluence={0.25}
+                noiseAmount={0}
+                distortion={0}
+              />
+            </div>
+          </div>
           <div className="portrait-stage">
             <img
               src="/me-white-removebg-preview.png"
@@ -491,7 +512,7 @@ function AboutSection() {
         <Reveal>
           <div className="about-main">
             <p className="kicker">
-              <span className="section-index">04</span> About
+              <span className="section-index">06</span> About
             </p>
             <h2 id="about-heading">{about.heading}</h2>
             <div className="about-copy">
@@ -553,28 +574,24 @@ function CapabilitiesSection() {
   );
 }
 
-function EngineeringSection() {
-  const stackSummary = skills
-    .slice(0, 3)
-    .map((group) => `${group.label}: ${group.items.slice(0, 3).join(", ")}`);
-  const visibleCertifications = certifications.slice(0, 2);
+function ExperienceSection() {
   const experienceHighlights = experience.flatMap((item) => item.bullets).slice(0, 3);
 
   return (
-    <section className="section" id="engineering" aria-labelledby="engineering-heading">
+    <section className="section" id="experience" aria-labelledby="experience-heading">
       <Reveal>
         <SectionHeader
           index="03"
-          id="engineering-heading"
-          kicker="Engineering"
-          title="Practical engineering background across software, AI, and cloud."
+          id="experience-heading"
+          kicker="Experience"
+          title="Professional delivery experience with clear execution ownership."
         />
       </Reveal>
 
       <div className="engineering-flow">
         <Reveal delay={0.04}>
           <article className="engineering-unit">
-            <h3>Experience</h3>
+            <h3>Internship</h3>
             <div className="timeline-list">
               {experience.map((item) => (
                 <article key={`${item.company}-${item.role}`} className="timeline-item">
@@ -597,19 +614,6 @@ function EngineeringSection() {
         <div className="engineering-secondary">
           <Reveal delay={0.08}>
             <article className="engineering-unit">
-              <h3>Core stack</h3>
-              <div className="stack-summary">
-                {stackSummary.map((line) => (
-                  <p key={line} className="stack-summary-line">
-                    {line}
-                  </p>
-                ))}
-              </div>
-            </article>
-          </Reveal>
-
-          <Reveal delay={0.12}>
-            <article className="engineering-unit">
               <h3>Education</h3>
               <div className="timeline-list">
                 {education.map((item) => (
@@ -624,7 +628,7 @@ function EngineeringSection() {
             </article>
           </Reveal>
 
-          <Reveal delay={0.16}>
+          <Reveal delay={0.12}>
             <article className="engineering-unit">
               <h3>Delivery highlights</h3>
               <ul className="highlight-list">
@@ -634,25 +638,72 @@ function EngineeringSection() {
               </ul>
             </article>
           </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
 
-          <Reveal delay={0.2}>
+function StackSection() {
+  const stackSummary = skills
+    .slice(0, 4)
+    .map((group) => `${group.label}: ${group.items.slice(0, 4).join(", ")}`);
+
+  return (
+    <section className="section" id="stack" aria-labelledby="stack-heading">
+      <Reveal>
+        <SectionHeader
+          index="04"
+          id="stack-heading"
+          kicker="Technical Stack"
+          title="Core technologies used across backend, AI, and cloud implementation."
+        />
+      </Reveal>
+
+      <div className="stack-flow">
+        {stackSummary.map((line, index) => (
+          <Reveal key={line} delay={0.04 + index * 0.04}>
             <article className="engineering-unit">
-              <h3>Certifications</h3>
-              <div className="cert-list">
-                {visibleCertifications.map((cert) => (
-                  <article key={cert.title} className="cert-item">
-                    <p className="meta-label">{cert.year}</p>
-                    <h4>{cert.title}</h4>
-                    <p>{cert.issuer}</p>
-                    <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="cert-link">
-                      Verify
-                    </a>
-                  </article>
-                ))}
-              </div>
+              <p className="stack-summary-line">{line}</p>
             </article>
           </Reveal>
-        </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function CertificationsSection() {
+  const visibleCertifications = certifications.slice(0, 4);
+
+  return (
+    <section className="section" id="certifications" aria-labelledby="certifications-heading">
+      <Reveal>
+        <SectionHeader
+          index="05"
+          id="certifications-heading"
+          kicker="Certifications"
+          title="Recent learning credentials aligned with applied AI and cloud workflows."
+        />
+      </Reveal>
+
+      <div className="cert-grid">
+        <Reveal delay={0.04}>
+          <article className="engineering-unit">
+            <div className="cert-list">
+              {visibleCertifications.map((cert) => (
+                <article key={cert.title} className="cert-item">
+                  <p className="meta-label">{cert.year}</p>
+                  <h4>{cert.title}</h4>
+                  <p>{cert.issuer}</p>
+                  <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer" className="cert-link">
+                    Verify
+                  </a>
+                </article>
+              ))}
+            </div>
+          </article>
+        </Reveal>
       </div>
     </section>
   );
@@ -666,7 +717,7 @@ function ContactSection() {
           <div className="contact-grid">
             <div className="contact-main">
               <p className="kicker">
-                <span className="section-index">05</span> Contact
+                <span className="section-index">07</span> Contact
               </p>
               <h2 id="contact-heading">Open to internship and freelance collaboration.</h2>
             </div>
