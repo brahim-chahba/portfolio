@@ -13,13 +13,11 @@ export const site = {
 
 export const navItems = [
   { label: "Home", href: "#hero" },
-  { label: "Work", href: "#work" },
-  { label: "Services", href: "#capabilities" },
   { label: "Experience", href: "#experience" },
   { label: "Stack", href: "#stack" },
   { label: "Certs", href: "#certifications" },
   { label: "About", href: "#about" },
-  { label: "Notes", href: "#testimonials" },
+  { label: "Testimonials", href: "#testimonials" },
   { label: "Contact", href: "#contact" },
 ];
 
