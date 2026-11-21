@@ -158,17 +158,224 @@ function HeroSection() {
       </div>
 
       <Reveal delay={0.1}>
-        <div className="hero-portrait" aria-label={`Portrait of ${site.name}`}>
+        <div className="hero-portrait" aria-label={`Fourier builder visualization for ${site.name}`}>
           <div className="mosaic mosaic-a" aria-hidden="true" />
           <div className="mosaic mosaic-b" aria-hidden="true" />
-          <div className="portrait-card">
-            <p>FIG. 01 / BUILDER</p>
-            <img src="/me-white-removebg-preview.png" alt={`Portrait of ${site.name}`} width="520" height="520" />
-            <span>SIDI IFNI / MOROCCO</span>
+          <div className="portrait-card portrait-card-fourier">
+            <p>FIG. 01 / FOURIER BUILDER</p>
+            <FourierBuilder />
+            <span>Σ Cₙeⁱⁿᵗ / SIDI IFNI</span>
           </div>
         </div>
       </Reveal>
     </section>
+  );
+}
+
+function FourierBuilder() {
+  const canvasRef = useRef(null);
+  const prefersReducedMotion = useContext(MotionPreferenceContext);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return undefined;
+
+    const context = canvas.getContext("2d");
+    const point = (x, y) => ({ x, y });
+    const lerp = (a, b, t) => point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+    const cubic = (a, b, c, d, t) => {
+      const u = 1 - t;
+      return point(
+        u ** 3 * a.x + 3 * u ** 2 * t * b.x + 3 * u * t ** 2 * c.x + t ** 3 * d.x,
+        u ** 3 * a.y + 3 * u ** 2 * t * b.y + 3 * u * t ** 2 * c.y + t ** 3 * d.y,
+      );
+    };
+
+    const top = point(-0.58, -0.96);
+    const bottom = point(-0.58, 0.96);
+    const middle = point(-0.58, 0.02);
+    const samplesPerSegment = 64;
+    const samples = [];
+
+    for (let index = 0; index < samplesPerSegment; index += 1) {
+      samples.push(lerp(top, bottom, index / samplesPerSegment));
+    }
+    for (let index = 0; index < samplesPerSegment; index += 1) {
+      samples.push(cubic(bottom, point(0.8, 1), point(0.82, 0.08), middle, index / samplesPerSegment));
+    }
+    for (let index = 0; index < samplesPerSegment; index += 1) {
+      samples.push(cubic(middle, point(0.78, -0.02), point(0.75, -1), top, index / samplesPerSegment));
+    }
+
+    const coefficients = samples.map((_, frequencyIndex) => {
+      const frequency = frequencyIndex <= samples.length / 2
+        ? frequencyIndex
+        : frequencyIndex - samples.length;
+      let real = 0;
+      let imaginary = 0;
+      samples.forEach((sample, sampleIndex) => {
+        const angle = (-2 * Math.PI * frequency * sampleIndex) / samples.length;
+        real += sample.x * Math.cos(angle) - sample.y * Math.sin(angle);
+        imaginary += sample.x * Math.sin(angle) + sample.y * Math.cos(angle);
+      });
+      real /= samples.length;
+      imaginary /= samples.length;
+      return {
+        frequency,
+        real,
+        imaginary,
+        amplitude: Math.hypot(real, imaginary),
+        phase: Math.atan2(imaginary, real),
+      };
+    });
+
+    const harmonics = coefficients
+      .sort((a, b) => b.amplitude - a.amplitude)
+      .slice(0, 22);
+    let width = 0;
+    let height = 0;
+    let animationFrame = 0;
+    let visible = true;
+    let previousCycle = -1;
+    let trace = [];
+
+    const resize = () => {
+      const bounds = canvas.getBoundingClientRect();
+      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      width = bounds.width;
+      height = bounds.height;
+      canvas.width = Math.max(1, Math.round(width * ratio));
+      canvas.height = Math.max(1, Math.round(height * ratio));
+      context.setTransform(ratio, 0, 0, ratio, 0, 0);
+      trace = [];
+    };
+
+    const draw = (time) => {
+      const duration = 12000;
+      const cycle = prefersReducedMotion ? 0 : Math.floor(time / duration);
+      const phase = prefersReducedMotion ? Math.PI * 1.72 : ((time % duration) / duration) * Math.PI * 2;
+      if (cycle !== previousCycle) {
+        trace = [];
+        previousCycle = cycle;
+      }
+
+      context.fillStyle = "#050609";
+      context.fillRect(0, 0, width, height);
+      context.strokeStyle = "rgba(255,255,255,.055)";
+      context.lineWidth = 1;
+      for (let x = 0; x < width; x += 16) {
+        context.beginPath();
+        context.moveTo(x, 0);
+        context.lineTo(x, height);
+        context.stroke();
+      }
+      for (let y = 0; y < height; y += 16) {
+        context.beginPath();
+        context.moveTo(0, y);
+        context.lineTo(width, y);
+        context.stroke();
+      }
+
+      const scale = Math.min(width, height) * 0.35;
+      const originX = width * 0.47;
+      const originY = height * 0.52;
+
+      context.beginPath();
+      samples.forEach((sample, index) => {
+        const x = originX + sample.x * scale;
+        const y = originY + sample.y * scale;
+        if (index === 0) context.moveTo(x, y);
+        else context.lineTo(x, y);
+      });
+      context.closePath();
+      context.strokeStyle = "rgba(143,177,235,.13)";
+      context.lineWidth = 1;
+      context.stroke();
+
+      let x = originX;
+      let y = originY;
+      harmonics.forEach((coefficient) => {
+        const previousX = x;
+        const previousY = y;
+        const angle = coefficient.frequency * phase + coefficient.phase;
+        const radius = coefficient.amplitude * scale;
+        x += radius * Math.cos(angle);
+        y += radius * Math.sin(angle);
+
+        if (radius > 1.5) {
+          context.beginPath();
+          context.arc(previousX, previousY, radius, 0, Math.PI * 2);
+          context.strokeStyle = "rgba(245,241,232,.2)";
+          context.lineWidth = 1;
+          context.stroke();
+        }
+        context.beginPath();
+        context.moveTo(previousX, previousY);
+        context.lineTo(x, y);
+        context.strokeStyle = "rgba(245,241,232,.86)";
+        context.lineWidth = 1.35;
+        context.stroke();
+      });
+
+      trace.push({ x, y });
+      if (trace.length > 720) trace.shift();
+      if (prefersReducedMotion) {
+        trace = samples.map((sample) => ({ x: originX + sample.x * scale, y: originY + sample.y * scale }));
+      }
+
+      if (trace.length > 1) {
+        context.beginPath();
+        context.moveTo(trace[0].x, trace[0].y);
+        trace.slice(1).forEach((tracePoint) => context.lineTo(tracePoint.x, tracePoint.y));
+        context.strokeStyle = "#4380ff";
+        context.lineWidth = 3;
+        context.shadowColor = "rgba(23,104,255,.7)";
+        context.shadowBlur = 9;
+        context.stroke();
+        context.shadowBlur = 0;
+      }
+
+      context.beginPath();
+      context.arc(x, y, 3.5, 0, Math.PI * 2);
+      context.fillStyle = "#f5f1e8";
+      context.fill();
+
+      context.fillStyle = "rgba(245,241,232,.62)";
+      context.font = "10px monospace";
+      context.fillText("N = 22 HARMONICS", 18, height - 22);
+
+      if (!prefersReducedMotion && visible) animationFrame = requestAnimationFrame(draw);
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+      if (prefersReducedMotion) draw(0);
+    });
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      cancelAnimationFrame(animationFrame);
+      if (visible) animationFrame = requestAnimationFrame(draw);
+    }, { rootMargin: "120px" });
+
+    resizeObserver.observe(canvas);
+    visibilityObserver.observe(canvas);
+    resize();
+    if (prefersReducedMotion) draw(0);
+
+    return () => {
+      cancelAnimationFrame(animationFrame);
+      resizeObserver.disconnect();
+      visibilityObserver.disconnect();
+    };
+  }, [prefersReducedMotion]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      className="fourier-builder"
+      role="img"
+      aria-label="Animated Fourier epicycles drawing the letter B with twenty-two harmonics"
+    />
   );
 }
 
@@ -272,7 +479,6 @@ function ProjectsSection() {
 function StackSection() {
   return (
     <Section id="stack" number="04" label="Core technologies" title="A focused stack for dependable delivery.">
-      <p className="section-intro">Names stay more legible than mixed brand logos and better fit the editorial system. Each technology gets one consistent pixel marker.</p>
       <div className="stack-grid">
         {skills.map((group, index) => (
           <Reveal key={group.label} delay={index * 0.04}>
@@ -359,7 +565,6 @@ function TestimonialsSection() {
           <span className="quote-mark">“</span>
           <div>
             <h3>References are being verified.</h3>
-            <p>I only publish approved, attributable feedback—never placeholder endorsements.</p>
           </div>
           <span className="status-chip">Verification in progress</span>
         </div>
