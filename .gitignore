@@ -34,15 +34,34 @@ lerna-debug.log*
 Thumbs.db
 Desktop.ini
 
-# Tool caches
+# Tool caches and generated design-tool state
 .agents/
 .gemini/
+.hallmark/
 .eslintcache
 .stylelintcache
 
 # Deployment folders
 .vercel/
 .netlify/
+
+# Generated screenshots & verification images
+verified-*.png
+portfolio-*.png
+verification-*.png
+look\ at\ this.png
+
+# Reference & inspiration images
+inspiration-reference-*.png
+inspiration-reference-*.jpg
+
+# Face inspection intermediates
+face-insp*.png
+fce-insp2.svg
+public/face-insp2-extracted.png
+
+# OCR data
+eng.traineddata
 
 ### AL ###
 #Template for AL projects for Dynamics 365 Business Central

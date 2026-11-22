@@ -43,6 +43,8 @@ export const education = [
     school: "National School of Applied Sciences of Al Hoceima (ENSAH)",
     degree: "State Engineering Degree — Digital Transformation & Artificial Intelligence",
     details: "Al Hoceima, Morocco",
+    coursework:
+      "Relevant coursework: Data ingestion and storage, SQL and NoSQL databases, enterprise Big Data architecture, business intelligence, artificial intelligence, software architecture and UML 2.0, DevOps, information-systems governance, and project management.",
   },
 ];
 
@@ -185,7 +187,31 @@ export const skills = [
   },
   {
     label: "Data engineering & analytics",
-    items: ["Apache Airflow", "ETL pipelines", "MinIO", "SQL", "Power BI"],
+    items: [
+      "Apache Airflow",
+      "ETL pipelines",
+      "Data ingestion",
+      "Data storage",
+      "MinIO",
+      "SQL",
+      "NoSQL",
+      "Big Data architecture",
+      "Business intelligence",
+      "Power BI",
+    ],
+  },
+  {
+    label: "Architecture & digital transformation",
+    items: [
+      "Software architecture",
+      "UML 2.0",
+      "Enterprise application design",
+      "Digital transformation",
+      "Information-systems governance",
+      "Requirements engineering",
+      "Technology consulting",
+      "Project management",
+    ],
   },
 ];
 

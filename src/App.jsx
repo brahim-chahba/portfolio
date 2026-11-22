@@ -589,6 +589,7 @@ function EducationSection() {
                 <h3>{item.degree}</h3>
                 <p className="company">{item.school}</p>
                 <p className="item-summary">{item.details}</p>
+                {item.coursework && <p className="item-summary">{item.coursework}</p>}
               </div>
               <span className="education-index" aria-hidden="true">EDU / 01</span>
             </article>
