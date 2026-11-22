@@ -191,27 +191,59 @@ export const skills = [
 
 export const certifications = [
   {
+    title: "Introduction à Docker",
+    issuer: "Certificate of completion",
+    year: "Jun 2026",
+    documentUrl: "/certificates/introduction-to-docker.pdf",
+    credentialUrl: null,
+  },
+  {
+    title: "JavaScript Foundations and Essential Concepts",
+    issuer: "Packt / Coursera",
+    year: "Dec 2025",
+    documentUrl: "/certificates/javascript-foundations.pdf",
+    credentialUrl: "https://coursera.org/verify/71AYG8AHLBMU",
+  },
+  {
+    title: "Develop Clustering Models with Azure ML Designer",
+    issuer: "Microsoft / Coursera",
+    year: "Nov 2025",
+    documentUrl: "/certificates/azure-ml-clustering.pdf",
+    credentialUrl: "https://coursera.org/verify/5E13L5P5EJ1C",
+  },
+  {
+    title: "Fraud Detection on Financial Transactions with Machine Learning on Google Cloud",
+    issuer: "Google Cloud / Coursera",
+    year: "Oct 2025",
+    documentUrl: "/certificates/fraud-detection-google-cloud.pdf",
+    credentialUrl: "https://coursera.org/verify/XM0OUCAVMEFP",
+  },
+  {
+    title: "Supervised Machine Learning: Regression and Classification",
+    issuer: "Stanford University / DeepLearning.AI / Coursera",
+    year: "Oct 2025",
+    documentUrl: "/certificates/supervised-machine-learning.pdf",
+    credentialUrl: "https://coursera.org/verify/YOSSUJY7KFGW",
+  },
+  {
+    title: "Udemy Certificate of Completion",
+    issuer: "Udemy",
+    year: "Apr 2025",
+    documentUrl: "/certificates/udemy-certificate.pdf",
+    credentialUrl: "https://www.udemy.com/certificate/UC-27a94ebc-b4f2-47bc-832e-82ceb3eb1177/",
+  },
+  {
     title: "Building with the Claude API",
     issuer: "Anthropic Academy",
     year: "Completed",
+    documentUrl: null,
     credentialUrl: null,
   },
   {
     title: "Build High-Performance Multi-Agent Systems",
     issuer: "Google Skills",
     year: "In progress",
-    credentialUrl: null,
-  },
-  {
-    title: "Supervised Machine Learning: Regression and Classification",
-    issuer: "Stanford Online / DeepLearning.AI",
-    year: "Oct 2025",
-    credentialUrl: null,
-  },
-  {
-    title: "Fraud Detection with Machine Learning",
-    issuer: "Google Cloud",
-    year: "Oct 2025",
+    documentUrl: null,
     credentialUrl: null,
   },
 ];

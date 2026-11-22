@@ -164,7 +164,6 @@ function HeroSection() {
           <div className="portrait-card portrait-card-fourier">
             <p>FIG. 01 / FOURIER BUILDER</p>
             <FourierBuilder />
-            <span>Σ Cₙeⁱⁿᵗ / SIDI IFNI</span>
           </div>
         </div>
       </Reveal>
@@ -182,62 +181,215 @@ function FourierBuilder() {
 
     const context = canvas.getContext("2d");
     const point = (x, y) => ({ x, y });
-    const lerp = (a, b, t) => point(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
-    const cubic = (a, b, c, d, t) => {
-      const u = 1 - t;
-      return point(
-        u ** 3 * a.x + 3 * u ** 2 * t * b.x + 3 * u * t ** 2 * c.x + t ** 3 * d.x,
-        u ** 3 * a.y + 3 * u ** 2 * t * b.y + 3 * u * t ** 2 * c.y + t ** 3 * d.y,
-      );
-    };
-
-    const top = point(-0.58, -0.96);
-    const bottom = point(-0.58, 0.96);
-    const middle = point(-0.58, 0.02);
-    const samplesPerSegment = 64;
-    const samples = [];
-
-    for (let index = 0; index < samplesPerSegment; index += 1) {
-      samples.push(lerp(top, bottom, index / samplesPerSegment));
-    }
-    for (let index = 0; index < samplesPerSegment; index += 1) {
-      samples.push(cubic(bottom, point(0.8, 1), point(0.82, 0.08), middle, index / samplesPerSegment));
-    }
-    for (let index = 0; index < samplesPerSegment; index += 1) {
-      samples.push(cubic(middle, point(0.78, -0.02), point(0.75, -1), top, index / samplesPerSegment));
-    }
-
-    const coefficients = samples.map((_, frequencyIndex) => {
-      const frequency = frequencyIndex <= samples.length / 2
-        ? frequencyIndex
-        : frequencyIndex - samples.length;
-      let real = 0;
-      let imaginary = 0;
-      samples.forEach((sample, sampleIndex) => {
-        const angle = (-2 * Math.PI * frequency * sampleIndex) / samples.length;
-        real += sample.x * Math.cos(angle) - sample.y * Math.sin(angle);
-        imaginary += sample.x * Math.sin(angle) + sample.y * Math.cos(angle);
-      });
-      real /= samples.length;
-      imaginary /= samples.length;
-      return {
-        frequency,
-        real,
-        imaginary,
-        amplitude: Math.hypot(real, imaginary),
-        phase: Math.atan2(imaginary, real),
-      };
-    });
-
-    const harmonics = coefficients
-      .sort((a, b) => b.amplitude - a.amplitude)
-      .slice(0, 22);
+    const directions = [
+      point(-1, 0), point(-1, -1), point(0, -1), point(1, -1),
+      point(1, 0), point(1, 1), point(0, 1), point(-1, 1),
+    ];
+    let samples = [];
+    let harmonics = [];
     let width = 0;
     let height = 0;
     let animationFrame = 0;
     let visible = true;
+    let disposed = false;
+    let cycleStartedAt = null;
     let previousCycle = -1;
     let trace = [];
+
+    const makePortraitPath = (image) => {
+      const resolution = 180;
+      const source = document.createElement("canvas");
+      source.width = resolution;
+      source.height = resolution;
+      const sourceContext = source.getContext("2d", { willReadFrequently: true });
+      sourceContext.drawImage(image, 0, 0, resolution, resolution);
+      const pixels = sourceContext.getImageData(0, 0, resolution, resolution).data;
+      const mask = new Uint8Array(resolution * resolution);
+      for (let index = 0; index < mask.length; index += 1) {
+        mask[index] = pixels[index * 4 + 3] > 36 ? 1 : 0;
+      }
+
+      const seen = new Uint8Array(mask.length);
+      let largestComponent = [];
+      for (let index = 0; index < mask.length; index += 1) {
+        if (!mask[index] || seen[index]) continue;
+        const component = [];
+        const queue = [index];
+        seen[index] = 1;
+        for (let cursor = 0; cursor < queue.length; cursor += 1) {
+          const current = queue[cursor];
+          component.push(current);
+          const x = current % resolution;
+          const y = Math.floor(current / resolution);
+          directions.forEach(({ x: offsetX, y: offsetY }) => {
+            const nextX = x + offsetX;
+            const nextY = y + offsetY;
+            if (nextX < 0 || nextY < 0 || nextX >= resolution || nextY >= resolution) return;
+            const next = nextY * resolution + nextX;
+            if (mask[next] && !seen[next]) {
+              seen[next] = 1;
+              queue.push(next);
+            }
+          });
+        }
+        if (component.length > largestComponent.length) largestComponent = component;
+      }
+
+      const componentMask = new Uint8Array(mask.length);
+      largestComponent.forEach((index) => { componentMask[index] = 1; });
+      const isFilled = (x, y) => (
+        x >= 0 && y >= 0 && x < resolution && y < resolution
+        && componentMask[y * resolution + x]
+      );
+      const startIndex = largestComponent
+        .filter((index) => {
+          const x = index % resolution;
+          const y = Math.floor(index / resolution);
+          return directions.some(({ x: dx, y: dy }) => !isFilled(x + dx, y + dy));
+        })
+        .sort((a, b) => a - b)[0];
+      if (startIndex === undefined) return [];
+
+      const start = point(startIndex % resolution, Math.floor(startIndex / resolution));
+      const outline = [start];
+      let current = start;
+      let backtrack = point(start.x - 1, start.y);
+      const startBacktrack = backtrack;
+      const maxSteps = resolution * resolution * 2;
+
+      for (let step = 0; step < maxSteps; step += 1) {
+        const relativeX = backtrack.x - current.x;
+        const relativeY = backtrack.y - current.y;
+        let directionIndex = directions.findIndex(({ x, y }) => x === relativeX && y === relativeY);
+        if (directionIndex < 0) directionIndex = 0;
+        let next = null;
+        let nextBacktrack = null;
+        for (let offset = 1; offset <= directions.length; offset += 1) {
+          const candidateIndex = (directionIndex + offset) % directions.length;
+          const candidateDirection = directions[candidateIndex];
+          const candidate = point(current.x + candidateDirection.x, current.y + candidateDirection.y);
+          if (isFilled(candidate.x, candidate.y)) {
+            const precedingDirection = directions[(candidateIndex + directions.length - 1) % directions.length];
+            next = candidate;
+            nextBacktrack = point(current.x + precedingDirection.x, current.y + precedingDirection.y);
+            break;
+          }
+        }
+        if (!next) break;
+        current = next;
+        backtrack = nextBacktrack;
+        if (
+          current.x === start.x && current.y === start.y
+          && backtrack.x === startBacktrack.x && backtrack.y === startBacktrack.y
+        ) break;
+        outline.push(current);
+      }
+
+      if (outline.length < 32) return [];
+      const lengths = [0];
+      for (let index = 1; index <= outline.length; index += 1) {
+        const previous = outline[index - 1];
+        const currentPoint = outline[index % outline.length];
+        lengths.push(lengths[index - 1] + Math.hypot(currentPoint.x - previous.x, currentPoint.y - previous.y));
+      }
+      const totalLength = lengths[lengths.length - 1];
+      const sampleCount = 721;
+      const resampled = [];
+      let segment = 1;
+      for (let index = 0; index < sampleCount; index += 1) {
+        const target = (index / sampleCount) * totalLength;
+        while (segment < lengths.length - 1 && lengths[segment] < target) segment += 1;
+        const previous = outline[(segment - 1) % outline.length];
+        const currentPoint = outline[segment % outline.length];
+        const segmentLength = lengths[segment] - lengths[segment - 1] || 1;
+        const amount = (target - lengths[segment - 1]) / segmentLength;
+        resampled.push(point(
+          previous.x + (currentPoint.x - previous.x) * amount,
+          previous.y + (currentPoint.y - previous.y) * amount,
+        ));
+      }
+
+      const minX = Math.min(...resampled.map(({ x }) => x));
+      const maxX = Math.max(...resampled.map(({ x }) => x));
+      const minY = Math.min(...resampled.map(({ y }) => y));
+      const maxY = Math.max(...resampled.map(({ y }) => y));
+      const centerX = (minX + maxX) / 2;
+      const centerY = (minY + maxY) / 2;
+      const normalizer = Math.max(maxX - minX, maxY - minY) / 2;
+      return resampled.map(({ x, y }) => point((x - centerX) / normalizer, (y - centerY) / normalizer));
+    };
+
+    const makeHarmonics = (path, targetAccuracy = 0.955, recordMetrics = false) => {
+      const maximumFrequency = Math.floor(path.length / 2);
+      const coefficients = [];
+      for (let frequency = -maximumFrequency; frequency <= maximumFrequency; frequency += 1) {
+        let real = 0;
+        let imaginary = 0;
+        path.forEach((sample, sampleIndex) => {
+          const angle = (-2 * Math.PI * frequency * sampleIndex) / path.length;
+          real += sample.x * Math.cos(angle) - sample.y * Math.sin(angle);
+          imaginary += sample.x * Math.sin(angle) + sample.y * Math.cos(angle);
+        });
+        real /= path.length;
+        imaginary /= path.length;
+        coefficients.push({
+          frequency,
+          amplitude: Math.hypot(real, imaginary),
+          phase: Math.atan2(imaginary, real),
+        });
+      }
+
+      const totalEnergy = coefficients.reduce((sum, coefficient) => (
+        sum + coefficient.amplitude ** 2
+      ), 0);
+      let frequencyLimit = maximumFrequency;
+      let accuracy = 1;
+      for (let limit = 1; limit <= maximumFrequency; limit += 1) {
+        const retainedEnergy = coefficients.reduce((sum, coefficient) => (
+          Math.abs(coefficient.frequency) <= limit
+            ? sum + coefficient.amplitude ** 2
+            : sum
+        ), 0);
+        accuracy = 1 - Math.sqrt(Math.max(0, totalEnergy - retainedEnergy) / totalEnergy);
+        if (accuracy >= targetAccuracy) {
+          frequencyLimit = limit;
+          break;
+        }
+      }
+      const retained = coefficients
+        .filter(({ frequency }) => Math.abs(frequency) <= frequencyLimit)
+        .sort((a, b) => b.amplitude - a.amplitude);
+      const squaredSignal = path.reduce((sum, sample) => (
+        sum + sample.x ** 2 + sample.y ** 2
+      ), 0);
+      const squaredError = path.reduce((sum, sample, sampleIndex) => {
+        const phase = (sampleIndex / path.length) * Math.PI * 2;
+        const reconstruction = retained.reduce((position, coefficient) => {
+          const angle = coefficient.frequency * phase + coefficient.phase;
+          return point(
+            position.x + coefficient.amplitude * Math.cos(angle),
+            position.y + coefficient.amplitude * Math.sin(angle),
+          );
+        }, point(0, 0));
+        return sum + (sample.x - reconstruction.x) ** 2 + (sample.y - reconstruction.y) ** 2;
+      }, 0);
+      accuracy = 1 - Math.sqrt(squaredError / squaredSignal);
+      if (recordMetrics) {
+        canvas.dataset.fourierAccuracy = accuracy.toFixed(4);
+        canvas.dataset.fourierSamples = String(path.length);
+        canvas.dataset.fourierTerms = String(retained.length);
+      }
+      return retained;
+    };
+
+    const reconstructSeriesAt = (series, phase) => series.reduce((position, coefficient) => {
+      const angle = coefficient.frequency * phase + coefficient.phase;
+      return point(
+        position.x + coefficient.amplitude * Math.cos(angle),
+        position.y + coefficient.amplitude * Math.sin(angle),
+      );
+    }, point(0, 0));
+    const reconstructAt = (phase) => reconstructSeriesAt(harmonics, phase);
 
     const resize = () => {
       const bounds = canvas.getBoundingClientRect();
@@ -250,15 +402,7 @@ function FourierBuilder() {
       trace = [];
     };
 
-    const draw = (time) => {
-      const duration = 12000;
-      const cycle = prefersReducedMotion ? 0 : Math.floor(time / duration);
-      const phase = prefersReducedMotion ? Math.PI * 1.72 : ((time % duration) / duration) * Math.PI * 2;
-      if (cycle !== previousCycle) {
-        trace = [];
-        previousCycle = cycle;
-      }
-
+    const drawGrid = () => {
       context.fillStyle = "#050609";
       context.fillRect(0, 0, width, height);
       context.strokeStyle = "rgba(255,255,255,.055)";
@@ -275,22 +419,30 @@ function FourierBuilder() {
         context.lineTo(width, y);
         context.stroke();
       }
+    };
 
-      const scale = Math.min(width, height) * 0.35;
-      const originX = width * 0.47;
-      const originY = height * 0.52;
+    const draw = (time) => {
+      drawGrid();
+      if (!samples.length || !harmonics.length) {
+        if (!prefersReducedMotion && visible) animationFrame = requestAnimationFrame(draw);
+        return;
+      }
 
-      context.beginPath();
-      samples.forEach((sample, index) => {
-        const x = originX + sample.x * scale;
-        const y = originY + sample.y * scale;
-        if (index === 0) context.moveTo(x, y);
-        else context.lineTo(x, y);
-      });
-      context.closePath();
-      context.strokeStyle = "rgba(143,177,235,.13)";
-      context.lineWidth = 1;
-      context.stroke();
+      const duration = 16000;
+      if (cycleStartedAt === null) cycleStartedAt = time;
+      const elapsed = Math.max(0, time - cycleStartedAt);
+      const cycle = prefersReducedMotion ? 0 : Math.floor(elapsed / duration);
+      const cycleProgress = prefersReducedMotion ? 1 : (elapsed % duration) / duration;
+      const portraitProgress = cycleProgress;
+      const phase = portraitProgress * Math.PI * 2;
+      if (cycle !== previousCycle) {
+        trace = [];
+        previousCycle = cycle;
+      }
+
+      const scale = Math.min(width, height) * 0.43;
+      const originX = width * 0.5;
+      const originY = height * 0.48;
 
       let x = originX;
       let y = originY;
@@ -302,10 +454,10 @@ function FourierBuilder() {
         x += radius * Math.cos(angle);
         y += radius * Math.sin(angle);
 
-        if (radius > 1.5) {
+        if (radius > 1.25) {
           context.beginPath();
           context.arc(previousX, previousY, radius, 0, Math.PI * 2);
-          context.strokeStyle = "rgba(245,241,232,.2)";
+          context.strokeStyle = "rgba(245,241,232,.18)";
           context.lineWidth = 1;
           context.stroke();
         }
@@ -313,22 +465,25 @@ function FourierBuilder() {
         context.moveTo(previousX, previousY);
         context.lineTo(x, y);
         context.strokeStyle = "rgba(245,241,232,.86)";
-        context.lineWidth = 1.35;
+        context.lineWidth = 1.2;
         context.stroke();
       });
 
-      trace.push({ x, y });
-      if (trace.length > 720) trace.shift();
-      if (prefersReducedMotion) {
-        trace = samples.map((sample) => ({ x: originX + sample.x * scale, y: originY + sample.y * scale }));
-      }
+      const visiblePortraitSamples = Math.max(1, Math.ceil(samples.length * portraitProgress));
+      trace = samples.slice(0, visiblePortraitSamples).map((_, sampleIndex) => {
+        const reconstruction = reconstructAt((sampleIndex / samples.length) * Math.PI * 2);
+        return {
+          x: originX + reconstruction.x * scale,
+          y: originY + reconstruction.y * scale,
+        };
+      });
 
       if (trace.length > 1) {
         context.beginPath();
         context.moveTo(trace[0].x, trace[0].y);
         trace.slice(1).forEach((tracePoint) => context.lineTo(tracePoint.x, tracePoint.y));
         context.strokeStyle = "#4380ff";
-        context.lineWidth = 3;
+        context.lineWidth = 2.8;
         context.shadowColor = "rgba(23,104,255,.7)";
         context.shadowBlur = 9;
         context.stroke();
@@ -339,10 +494,6 @@ function FourierBuilder() {
       context.arc(x, y, 3.5, 0, Math.PI * 2);
       context.fillStyle = "#f5f1e8";
       context.fill();
-
-      context.fillStyle = "rgba(245,241,232,.62)";
-      context.font = "10px monospace";
-      context.fillText("N = 22 HARMONICS", 18, height - 22);
 
       if (!prefersReducedMotion && visible) animationFrame = requestAnimationFrame(draw);
     };
@@ -360,9 +511,24 @@ function FourierBuilder() {
     resizeObserver.observe(canvas);
     visibilityObserver.observe(canvas);
     resize();
+
+    const portrait = new Image();
+    portrait.onload = () => {
+      if (disposed) return;
+      samples = makePortraitPath(portrait);
+      harmonics = makeHarmonics(samples, 0.955, true);
+      trace = [];
+      cycleStartedAt = null;
+      previousCycle = -1;
+      cancelAnimationFrame(animationFrame);
+      if (prefersReducedMotion) draw(0);
+      else if (visible) animationFrame = requestAnimationFrame(draw);
+    };
+    portrait.src = "/me-white-removebg-preview.png";
     if (prefersReducedMotion) draw(0);
 
     return () => {
+      disposed = true;
       cancelAnimationFrame(animationFrame);
       resizeObserver.disconnect();
       visibilityObserver.disconnect();
@@ -374,7 +540,7 @@ function FourierBuilder() {
       ref={canvasRef}
       className="fourier-builder"
       role="img"
-      aria-label="Animated Fourier epicycles drawing the letter B with twenty-two harmonics"
+      aria-label="Animated Fourier epicycles constructing Brahim Chahba's portrait from an empty canvas"
     />
   );
 }
@@ -509,11 +675,17 @@ function CertificationsSection() {
                 <p>{cert.issuer}</p>
               </div>
               <span className="cert-year">{cert.year}</span>
-              {cert.credentialUrl ? (
-                <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">Verify ↗</a>
-              ) : (
-                <span className="cert-status" aria-label="No public credential link">—</span>
-              )}
+              <div className="cert-actions">
+                {cert.documentUrl && (
+                  <a href={cert.documentUrl} target="_blank" rel="noopener noreferrer">View ↗</a>
+                )}
+                {cert.credentialUrl && (
+                  <a href={cert.credentialUrl} target="_blank" rel="noopener noreferrer">Verify ↗</a>
+                )}
+                {!cert.documentUrl && !cert.credentialUrl && (
+                  <span className="cert-status" aria-label="No public credential link">—</span>
+                )}
+              </div>
             </article>
           </Reveal>
         ))}

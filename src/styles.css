@@ -125,11 +125,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 /* Certifications */
 .cert-list { border-top: 1px solid var(--color-ink); }
-.cert-row { min-height: 7.2rem; padding: 1.4rem 0; display: grid; grid-template-columns: 3rem minmax(0, 1fr) 5rem 5rem; align-items: center; gap: 1.25rem; border-bottom: 1px solid var(--color-border-strong); }
+.cert-row { min-height: 7.2rem; padding: 1.4rem 0; display: grid; grid-template-columns: 3rem minmax(0, 1fr) 5rem 8.5rem; align-items: center; gap: 1.25rem; border-bottom: 1px solid var(--color-border-strong); }
 .cert-index, .cert-year { color: var(--color-ink-muted); font: 700 .65rem var(--font-mono); }
 .cert-row h3 { font: 400 clamp(1.3rem, 2vw, 1.75rem)/1.12 var(--font-display); }
 .cert-row p { margin-top: .35rem; color: var(--color-ink-muted); font-size: .75rem; }
-.cert-row a, .cert-status { justify-self: end; color: var(--color-accent); font: 700 .66rem var(--font-mono); text-transform: uppercase; }
+.cert-actions { justify-self: end; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .55rem .9rem; }
+.cert-row a, .cert-status { color: var(--color-accent); font: 700 .66rem var(--font-mono); text-transform: uppercase; }
 .cert-status { color: var(--color-ink-muted); }
 
 /* About */
@@ -214,7 +215,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   .portrait-card { height: 23rem; }
   .fact-list > div { grid-template-columns: 1fr; gap: .35rem; }
   .cert-row { grid-template-columns: 1.5rem 1fr; }
-  .cert-row a { grid-column: 2; justify-self: start; }
+  .cert-actions { grid-column: 2; justify-self: start; justify-content: flex-start; }
 }
 
 @media (prefers-reduced-motion: reduce) {
